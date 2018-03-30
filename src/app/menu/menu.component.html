@@ -1,0 +1,15 @@
+<nav class="navbar navbar-expand-md navbar-light bg-light">
+  <a href="" routerLink="/" class="navbar-brand">PonyRacer</a>
+  <!-- burger button mobile -->
+  <button type="button" class="navbar-toggler navbar-toggler-right" (click)="toggleNavbar()">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <!-- items menu -->
+  <div id="navbar" class="navbar-collapse" [class.collapse]="navbarCollapsed" >
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a href="" routerLink="/races" routerLinkActive="selected" class="nav-link">Races</a>
+      </li>
+    </ul>
+  </div>
+</nav>
