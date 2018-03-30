@@ -5,11 +5,18 @@
     <span class="navbar-toggler-icon"></span>
   </button>
   <!-- items menu -->
-  <div id="navbar" class="navbar-collapse" [class.collapse]="navbarCollapsed" >
+  <div id="navbar" class="navbar-collapse" [class.collapse]="navbarCollapsed">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
         <a href="" routerLink="/races" routerLinkActive="selected" class="nav-link">Races</a>
       </li>
     </ul>
+    <div class="nav navbar-nav">
+      <span class="nav-item navbar-text mr-2" *ngIf="this.user">
+        {{ user.login }}
+        <span class="fa fa-star"></span>
+        {{ user.money }}
+      </span>
+    </div>
   </div>
 </nav>
