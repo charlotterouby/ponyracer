@@ -2,7 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { ROUTES } from './app.routes';
 import { RaceService } from './race.service';
@@ -15,6 +15,7 @@ import { RacesComponent } from './races/races.component';
 import { RaceComponent } from './race/race.component';
 import { PonyComponent } from './pony/pony.component';
 import { FromNowPipe } from './from-now.pipe';
+import { LoginComponent } from './login/login.component';
 
 
 @NgModule({
@@ -26,13 +27,15 @@ import { FromNowPipe } from './from-now.pipe';
     PonyComponent,
     FromNowPipe,
     HomeComponent,
-    RegisterComponent
+    RegisterComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     RouterModule.forRoot(ROUTES),
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule
   ],
   providers: [
     RaceService,

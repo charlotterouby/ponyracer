@@ -9,9 +9,13 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  register(login: string, password: string, birthYear: number) {
+  register(login: string, password: string, birthYear: number): Observable<Object> {
     const params = {login, password, birthYear};
-    return this.http.post(`${this._configUrl}/api/users`, params );
+    return this.http.post<Object>(`${this._configUrl}/api/users`, params );
+  }
+
+  authenticate(credentials: {login: string; password: string}): Observable<Object> {
+    return this.http.post<Object>(`${this._configUrl}/api/users/authentication`, credentials);
   }
 
 }
