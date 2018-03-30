@@ -4,16 +4,17 @@ import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 
+import { ROUTES } from './app.routes';
 import { RaceService } from './race.service';
+import { UserService } from './user.service';
 import { AppComponent } from './app.component';
 import { MenuComponent } from './menu/menu.component';
+import { HomeComponent } from './home/home.component';
+import { RegisterComponent } from './register/register.component';
 import { RacesComponent } from './races/races.component';
 import { RaceComponent } from './race/race.component';
 import { PonyComponent } from './pony/pony.component';
 import { FromNowPipe } from './from-now.pipe';
-import { ROUTES } from './app.routes';
-import { HomeComponent } from './home/home.component';
-import { RegisterComponent } from './register/register.component';
 
 
 @NgModule({
@@ -34,7 +35,8 @@ import { RegisterComponent } from './register/register.component';
     ReactiveFormsModule
   ],
   providers: [
-    RaceService
+    RaceService,
+    UserService
   ],
   bootstrap: [AppComponent]
 })
