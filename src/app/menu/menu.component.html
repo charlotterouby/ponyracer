@@ -7,7 +7,7 @@
   <!-- items menu -->
   <div id="navbar" class="navbar-collapse" [class.collapse]="navbarCollapsed">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="this.user">
         <a href="" routerLink="/races" routerLinkActive="selected" class="nav-link">Races</a>
       </li>
     </ul>
