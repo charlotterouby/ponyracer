@@ -41,4 +41,9 @@ export class UserService {
     }
   }
 
+  logout() {
+    this.userEvents.next(null);
+    window.localStorage.removeItem('rememberMe');
+  }
+
 }

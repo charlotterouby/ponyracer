@@ -11,11 +11,14 @@
         <a href="" routerLink="/races" routerLinkActive="selected" class="nav-link">Races</a>
       </li>
     </ul>
-    <div class="nav navbar-nav">
-      <span class="nav-item navbar-text mr-2" *ngIf="this.user">
+    <div class="nav navbar-nav" *ngIf="this.user">
+      <span class="nav-item navbar-text mr-2">
         {{ user.login }}
         <span class="fa fa-star"></span>
         {{ user.money }}
+      </span>
+      <span class="nav-item nav-link">
+        <span class="fa fa-power-off" (click)="logout($event)"></span>
       </span>
     </div>
   </div>

@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { UserService } from '../user.service';
 import { UserModel } from '../models/user.model';
 
@@ -14,7 +15,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   user: UserModel | null = null;
   userEventsSubscription;
 
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService, private router: Router) { }
 
   ngOnInit() {
     this.userEventsSubscription = this.userService.userEvents.subscribe(user => this.user = user);
@@ -29,6 +30,14 @@ export class MenuComponent implements OnInit, OnDestroy {
 
   toggleNavbar() {
     this.navbarCollapsed = !this.navbarCollapsed;
+  }
+
+  logout(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.userService.logout();
+    this.router.navigate(['/']);
   }
 
 }
