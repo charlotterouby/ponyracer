@@ -5,4 +5,5 @@ export interface RaceModel {
     ponies: Array<PonyModel>;
     id: number;
     startInstant: string;
+    betPonyId?: number;
 }

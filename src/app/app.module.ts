@@ -17,6 +17,7 @@ import { RaceComponent } from './race/race.component';
 import { PonyComponent } from './pony/pony.component';
 import { FromNowPipe } from './from-now.pipe';
 import { LoginComponent } from './login/login.component';
+import { BetComponent } from './bet/bet.component';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { LoginComponent } from './login/login.component';
     FromNowPipe,
     HomeComponent,
     RegisterComponent,
-    LoginComponent
+    LoginComponent,
+    BetComponent
   ],
   imports: [
     BrowserModule,
