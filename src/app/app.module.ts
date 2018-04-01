@@ -18,6 +18,7 @@ import { PonyComponent } from './pony/pony.component';
 import { FromNowPipe } from './from-now.pipe';
 import { LoginComponent } from './login/login.component';
 import { BetComponent } from './bet/bet.component';
+import { LiveComponent } from './live/live.component';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { BetComponent } from './bet/bet.component';
     HomeComponent,
     RegisterComponent,
     LoginComponent,
-    BetComponent
+    BetComponent,
+    LiveComponent
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,9 @@
 <div *ngIf="raceModel">
   <h2>{{ raceModel.name }}</h2>
   <p>{{ raceModel.startInstant | fromNow }}</p>
+
+  <a href="" [routerLink]="['/races', raceModel.id, 'live']" class="btn btn-primary">Watch live!</a>
+  
   <div class="alert alert-danger" *ngIf="betFailed">The race is already started or finished</div>
 
   <section class="row">

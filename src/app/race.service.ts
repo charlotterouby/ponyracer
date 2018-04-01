@@ -2,9 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
+import { interval } from 'rxjs/observable/interval';
+import { map, take } from 'rxjs/operators';
 
-import { RaceModel } from './models/race.model';
 import { environment } from '../environments/environment';
+import { RaceModel } from './models/race.model';
+import { PonyWithPositionModel } from './models/pony.model';
 
 
 @Injectable()
@@ -49,6 +52,42 @@ export class RaceService {
   cancelBet(raceId: number) {
     if (!raceId) { return; }
     return this.http.delete(`${environment.baseUrl}/api/races/${raceId}/bets`);
+  }
+
+  /**
+   * get the details of the race
+   * @param raceId number wich is the id of the race
+   */
+  live(raceId): Observable<Array<PonyWithPositionModel>> {
+    return interval(1000).pipe(
+      map(val => [{
+        id: 1,
+        name: 'Superb Runner',
+        color: 'BLUE',
+        position: val
+      }, {
+        id: 2,
+        name: 'Awesome Fridge',
+        color: 'GREEN',
+        position: val
+      }, {
+        id: 3,
+        name: 'Great Bottle',
+        color: 'ORANGE',
+        position: val
+      }, {
+        id: 4,
+        name: 'Little Flower',
+        color: 'YELLOW',
+        position: val
+      }, {
+        id: 5,
+        name: 'Nice Rock',
+        color: 'PURPLE',
+        position: val
+      }]),
+      take(101)
+    );
   }
 
 }
