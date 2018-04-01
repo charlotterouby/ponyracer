@@ -9,11 +9,13 @@ import { environment } from '../environments/environment';
 import { RaceModel } from './models/race.model';
 import { PonyWithPositionModel } from './models/pony.model';
 
+import { WsService } from './ws.service';
+
 
 @Injectable()
 export class RaceService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private wsService: WsService) { }
   /**
    * get the list of the pending races
    * @returns Observable<Array<RaceModel>>
@@ -55,38 +57,12 @@ export class RaceService {
   }
 
   /**
-   * get the details of the race
+   * get the list of ponies running in the race with their current position
    * @param raceId number wich is the id of the race
    */
   live(raceId): Observable<Array<PonyWithPositionModel>> {
-    return interval(1000).pipe(
-      map(val => [{
-        id: 1,
-        name: 'Superb Runner',
-        color: 'BLUE',
-        position: val
-      }, {
-        id: 2,
-        name: 'Awesome Fridge',
-        color: 'GREEN',
-        position: val
-      }, {
-        id: 3,
-        name: 'Great Bottle',
-        color: 'ORANGE',
-        position: val
-      }, {
-        id: 4,
-        name: 'Little Flower',
-        color: 'YELLOW',
-        position: val
-      }, {
-        id: 5,
-        name: 'Nice Rock',
-        color: 'PURPLE',
-        position: val
-      }]),
-      take(101)
+    return this.wsService.connect(`/race/${raceId}`).pipe(
+      map(data => data.ponies)
     );
   }
 
