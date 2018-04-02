@@ -6,4 +6,5 @@ export interface RaceModel {
     id: number;
     startInstant: string;
     betPonyId?: number;
+    status?: 'PENDING' | 'RUNNING' | 'FINISHED';
 }
