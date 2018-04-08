@@ -6,13 +6,14 @@ import { tap } from 'rxjs/operators';
 import { UserModel } from './models/user.model';
 import { environment } from '../environments/environment';
 import { JwtInterceptorService } from './jwt-interceptor.service';
+import { WsService } from './ws.service';
 
 @Injectable()
 export class UserService {
 
   userEvents: BehaviorSubject<UserModel> = new BehaviorSubject<UserModel>(undefined);
 
-  constructor(private http: HttpClient, private jwtService: JwtInterceptorService) {
+  constructor(private http: HttpClient, private jwtService: JwtInterceptorService, private wsService: WsService) {
     this.retrieveUser();
   }
   /**
@@ -68,6 +69,10 @@ export class UserService {
     this.userEvents.next(null);
     window.localStorage.removeItem('rememberMe');
     this.jwtService.removeJwtToken();
+  }
+
+  scoreUpdates(userId: number) {
+    return this.wsService.connect(`/player/${userId}`);
   }
 
 }
