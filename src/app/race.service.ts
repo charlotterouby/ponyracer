@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { Observable } from 'rxjs/Observable';
-import { interval } from 'rxjs/observable/interval';
 import { map, takeWhile } from 'rxjs/operators';
 
 import { environment } from '../environments/environment';
@@ -11,12 +10,12 @@ import { PonyWithPositionModel } from './models/pony.model';
 
 import { WsService } from './ws.service';
 
-
 @Injectable()
 export class RaceService {
 
   constructor(private http: HttpClient, private wsService: WsService) { }
-  /**
+
+/**
    * get the list of the pending races
    * @param status string : le statut de la course 'PENDING' ou 'FINISHED'
    * @returns Observable<Array<RaceModel>>
@@ -45,17 +44,17 @@ export class RaceService {
    * @param id number which is the id of the race
    * @returns Observable<RaceModel>
    */
-  get(id: number): Observable<RaceModel> {
-    if (!id) { return; }
-    return this.http.get<RaceModel>(`${environment.baseUrl}/api/races/${id}`);
+  get(raceId: number): Observable<RaceModel> {
+    if (!raceId) { return; }
+    return this.http.get<RaceModel>(`${environment.baseUrl}/api/races/${raceId}`);
   }
 
-  /**
+/**
    * cancel the bet on a race
    * @param raceId number which is the id of the race
    * @returns Observable without response if success
    */
-  cancelBet(raceId: number) {
+  cancelBet(raceId: number): Observable<any> {
     if (!raceId) { return; }
     return this.http.delete(`${environment.baseUrl}/api/races/${raceId}/bets`);
   }
@@ -66,8 +65,8 @@ export class RaceService {
    */
   live(raceId): Observable<Array<PonyWithPositionModel>> {
     return this.wsService.connect(`/race/${raceId}`).pipe(
-      takeWhile(race => race.status !== 'FINISHED'),
-      map(race => race.ponies)
+      takeWhile(liveRace => liveRace.status !== 'FINISHED'),
+      map(liveRace => liveRace.ponies)
     );
   }
 

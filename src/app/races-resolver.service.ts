@@ -10,10 +10,8 @@ export class RacesResolverService implements Resolve<Array<RaceModel>> {
 
   constructor(private raceService: RaceService) { }
 
-  // tslint:disable-next-line:max-line-length
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Array<RaceModel>> | Promise<Array<RaceModel>> | Array<RaceModel> {
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Array<RaceModel>> {
     const status = route.routeConfig.path.toUpperCase();
     return this.raceService.list(status);
   }
-
 }

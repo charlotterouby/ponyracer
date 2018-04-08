@@ -10,9 +10,8 @@ export class RaceResolverService implements Resolve<RaceModel> {
 
   constructor(private raceService: RaceService) { }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<RaceModel> | Promise<RaceModel> | RaceModel {
-    const id = +route.params.raceId;
-    return this.raceService.get(id);
+  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<RaceModel> {
+    const raceId = +route.paramMap.get('raceId');
+    return this.raceService.get(raceId);
   }
-
 }
