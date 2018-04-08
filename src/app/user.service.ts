@@ -70,9 +70,20 @@ export class UserService {
     window.localStorage.removeItem('rememberMe');
     this.jwtService.removeJwtToken();
   }
-
+  /**
+   * abonnement aux updates du score du user loggedIn via le WebSocket
+   * @param userId number which is the id of the loggedIn user
+   */
   scoreUpdates(userId: number) {
     return this.wsService.connect(`/player/${userId}`);
+  }
+
+  /**
+   * test si un user est connecté
+   */
+  isLoggedIn(): boolean {
+    const userRememberMe = window.localStorage.getItem('rememberMe');
+    return userRememberMe ? true : false;
   }
 
 }

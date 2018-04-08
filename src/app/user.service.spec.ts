@@ -125,4 +125,20 @@ describe('UserService', () => {
 
     expect(wsService.connect).toHaveBeenCalledWith(`/player/${userId}`);
   });
+
+  it('should tell that the user is logged in if the token is present', () => {
+    spyOn(mockLocalStorage, 'getItem').and.returnValue(JSON.stringify(user));
+
+    expect(userService.isLoggedIn()).toBeTruthy();
+
+    expect(mockLocalStorage.getItem).toHaveBeenCalledWith('rememberMe');
+  });
+
+  it('should tell that the user is not logged in if the token is not present', () => {
+    spyOn(mockLocalStorage, 'getItem').and.returnValue(null);
+
+    expect(userService.isLoggedIn()).toBeFalsy();
+
+    expect(mockLocalStorage.getItem).toHaveBeenCalledWith('rememberMe');
+  });
 });

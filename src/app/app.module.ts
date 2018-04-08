@@ -12,6 +12,7 @@ import { RaceService } from './race.service';
 import { UserService } from './user.service';
 import { JwtInterceptorService } from './jwt-interceptor.service';
 import { WsService } from './ws.service';
+import { LoggedInGuard } from './logged-in.guard';
 
 import { AppComponent } from './app.component';
 import { MenuComponent } from './menu/menu.component';
@@ -54,7 +55,8 @@ import { FromNowPipe } from './from-now.pipe';
     { provide: HTTP_INTERCEPTORS, useExisting: JwtInterceptorService, multi: true },
     WsService,
     { provide: WEBSOCKET, useFactory: () => WebSocket },
-    { provide: WEBSTOMP, useFactory: () => Webstomp }
+    { provide: WEBSTOMP, useFactory: () => Webstomp },
+    LoggedInGuard
   ],
   bootstrap: [AppComponent]
 })
