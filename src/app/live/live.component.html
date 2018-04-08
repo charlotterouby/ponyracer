@@ -31,12 +31,18 @@
 
     <!-- status RUNNING -->
     <div *ngSwitchCase="'RUNNING'">
-      <div style="margin-left: 95%; margin-bottom: 5px;">
-        <span class="fa fa-flag" style="font-size: x-large;"></span>
+      <div class="containerFlag">
+        <span class="fa fa-flag"></span>
       </div>
-      <div style="width: 95%; border-right: 3px dotted lightgray;">
-        <div *ngFor="let pony of poniesWithPosition" class="pony-wrapper" [class.selected]="pony.id === raceModel.betPonyId" [style.marginLeft.%]="pony.position - 5">
-          <pr-pony [ponyModel]="pony" [isRunning]="true"></pr-pony>
+      <div class="raceTracks">
+        <div *ngFor="let pony of poniesWithPosition trackBy ponyById" 
+              class="pony-wrapper" 
+              [class.selected]="pony.id === raceModel.betPonyId" 
+              [style.marginLeft.%]="pony.position - 5">
+          <pr-pony [ponyModel]="pony" 
+                    [isRunning]="true" 
+                    [isBoosted]="pony.boosted" 
+                    (ponyClicked)="onClick(pony)"></pr-pony>
         </div>
       </div>
     </div>

@@ -33,7 +33,10 @@ export class RaceService {
    */
   bet(raceId: number, ponyId: number): Observable<RaceModel> {
     if (!raceId || !ponyId) { return; }
-    return this.http.post<RaceModel>(`${environment.baseUrl}/api/races/${raceId}/bets`, { ponyId });
+    const params = {
+      ponyId
+    };
+    return this.http.post<RaceModel>(`${environment.baseUrl}/api/races/${raceId}/bets`, params);
   }
 
   /**
@@ -62,9 +65,21 @@ export class RaceService {
    */
   live(raceId): Observable<Array<PonyWithPositionModel>> {
     return this.wsService.connect(`/race/${raceId}`).pipe(
-      takeWhile(race => race.status !== 'FINISHED' ),
+      takeWhile(race => race.status !== 'FINISHED'),
       map(race => race.ponies)
     );
+  }
+
+  /**
+   * boost a pony by increasing its speed while running
+   * @param raceId number wich is the id of the race
+   * @param ponyId number wich is the id of the pony boosted
+   */
+  boost(raceId: number, ponyId: number) {
+    const params = {
+      ponyId
+    };
+    return this.http.post(`${environment.baseUrl}/api/races/${raceId}/boosts`, params);
   }
 
 }

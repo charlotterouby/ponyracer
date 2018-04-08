@@ -1,3 +1,21 @@
 .selected {
   border-left: 3px solid green;
 }
+
+.containerFlag {
+  margin-left: 95%;
+  margin-bottom: 5px;
+}
+
+.fa-flag {
+  font-size: x-large;
+}
+
+.raceTracks {
+  width: 95%;
+  border-right: 3px dotted lightgray;
+}
+
+.pony-wrapper {
+  transition: all linear 1s;
+}

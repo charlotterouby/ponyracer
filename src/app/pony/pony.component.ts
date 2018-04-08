@@ -9,6 +9,7 @@ import { PonyModel } from '../models/pony.model';
 export class PonyComponent implements OnInit {
   @Input() ponyModel: PonyModel;
   @Input() isRunning: boolean;
+  @Input() isBoosted: boolean;
   @Output() ponyClicked = new EventEmitter<PonyModel>();
 
   constructor() { }
@@ -17,8 +18,11 @@ export class PonyComponent implements OnInit {
   }
 
   getPonyImageUrl() {
-    if (this.isRunning) {
+    if (this.isRunning && !this.isBoosted) {
       return `assets/images/pony-${this.ponyModel.color.toLowerCase()}-running.gif`;
+    }
+    if (this.isRunning && this.isBoosted) {
+      return `assets/images/pony-${this.ponyModel.color.toLowerCase()}-rainbow.gif`;
     }
     return `assets/images/pony-${this.ponyModel.color.toLowerCase()}.gif`;
   }
