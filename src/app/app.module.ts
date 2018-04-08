@@ -13,6 +13,8 @@ import { UserService } from './user.service';
 import { JwtInterceptorService } from './jwt-interceptor.service';
 import { WsService } from './ws.service';
 import { LoggedInGuard } from './logged-in.guard';
+import { RacesResolverService } from './races-resolver.service';
+import { RaceResolverService } from './race-resolver.service';
 
 import { AppComponent } from './app.component';
 import { MenuComponent } from './menu/menu.component';
@@ -24,6 +26,8 @@ import { PonyComponent } from './pony/pony.component';
 import { LoginComponent } from './login/login.component';
 import { BetComponent } from './bet/bet.component';
 import { LiveComponent } from './live/live.component';
+import { PendingRacesComponent } from './races/pending-races/pending-races.component';
+import { FinishedRacesComponent } from './races/finished-races/finished-races.component';
 
 import { FromNowPipe } from './from-now.pipe';
 
@@ -39,7 +43,9 @@ import { FromNowPipe } from './from-now.pipe';
     RegisterComponent,
     LoginComponent,
     BetComponent,
-    LiveComponent
+    LiveComponent,
+    PendingRacesComponent,
+    FinishedRacesComponent
   ],
   imports: [
     BrowserModule,
@@ -56,7 +62,9 @@ import { FromNowPipe } from './from-now.pipe';
     WsService,
     { provide: WEBSOCKET, useFactory: () => WebSocket },
     { provide: WEBSTOMP, useFactory: () => Webstomp },
-    LoggedInGuard
+    LoggedInGuard,
+    RacesResolverService,
+    RaceResolverService
   ],
   bootstrap: [AppComponent]
 })

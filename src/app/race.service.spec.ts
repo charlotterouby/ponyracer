@@ -32,7 +32,7 @@ describe('RaceService', () => {
     const hardcodedRaces = [{ name: 'Paris' }, { name: 'Tokyo' }, { name: 'Lyon' }];
 
     let actualRaces = [];
-    raceService.list().subscribe((races: Array<RaceModel>) => actualRaces = races);
+    raceService.list('PENDING').subscribe((races: Array<RaceModel>) => actualRaces = races);
 
     http.expectOne(`${environment.baseUrl}/api/races?status=PENDING`)
       .flush(hardcodedRaces);

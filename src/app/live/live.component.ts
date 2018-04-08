@@ -22,20 +22,15 @@ export class LiveComponent implements OnInit, OnDestroy {
   positionSubscription: Subscription;
   poniesWithPosition: Array<PonyWithPositionModel> = [];
   error = false;
-  winners: Array<PonyWithPositionModel>;
+  winners: Array<PonyWithPositionModel> = [];
   betWon: boolean;
   clickSubject: Subject<PonyWithPositionModel> = new Subject<PonyWithPositionModel>();
 
   constructor(private raceService: RaceService, private route: ActivatedRoute) { }
   ngOnInit() {
-    let id: string | number = this.route.snapshot.paramMap.get('raceId');
-    if (id) {
-      id = Number.parseInt(id);
-      this.positionSubscription = this.raceService.get(id).pipe(
-        tap(race => this.raceModel = race),
-        filter(race => race.status !== 'FINISHED'),
-        switchMap(() => this.raceService.live(id))
-      ).subscribe(
+    this.raceModel = this.route.snapshot.data['race'];
+    if (this.raceModel.status !== 'FINISHED') {
+      this.positionSubscription = this.raceService.live(+this.route.snapshot.paramMap.get('raceId')).subscribe(
         listOfPonies => {
           this.raceModel.status = 'RUNNING';
           this.poniesWithPosition = listOfPonies;
@@ -55,6 +50,8 @@ export class LiveComponent implements OnInit, OnDestroy {
         }
       );
     }
+
+
 
     this.clickSubject.pipe(
       groupBy(pony => pony.id, pony => pony.id),

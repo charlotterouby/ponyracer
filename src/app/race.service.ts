@@ -18,10 +18,11 @@ export class RaceService {
   constructor(private http: HttpClient, private wsService: WsService) { }
   /**
    * get the list of the pending races
+   * @param status string : le statut de la course 'PENDING' ou 'FINISHED'
    * @returns Observable<Array<RaceModel>>
    */
-  list(): Observable<Array<RaceModel>> {
-    const params = { status: 'PENDING' };
+  list(status: string): Observable<Array<RaceModel>> {
+    const params = { status };
     return this.http.get<Array<RaceModel>>(`${environment.baseUrl}/api/races`, { params });
   }
 

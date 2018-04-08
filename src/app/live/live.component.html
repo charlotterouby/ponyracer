@@ -1,9 +1,9 @@
-<div *ngIf="raceModel && poniesWithPosition">
+<div>
   <h2>{{ raceModel.name }}</h2>
 
   <div class="alert alert-danger" *ngIf="error">A problem occurred during the live.</div>
 
-  <div id="live-race" [ngSwitch]="raceModel?.status">
+  <div id="live-race" [ngSwitch]="raceModel.status">
     <!-- status FINISHED -->
     <div *ngSwitchCase="'FINISHED'">
       <div *ngIf="!winners.length; else displayWinners">The race is over.</div>

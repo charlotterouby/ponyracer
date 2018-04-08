@@ -1,6 +1,6 @@
 import { async, TestBed } from '@angular/core/testing';
+import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute, convertToParamMap } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { of } from 'rxjs/observable/of';
 import { _throw } from 'rxjs/observable/throw';
@@ -13,10 +13,9 @@ import { RaceModel } from '../models/race.model';
 import { PonyModel } from '../models/pony.model';
 
 describe('BetComponent', () => {
-  const fakeRaceService = jasmine.createSpyObj('RaceService', ['get', 'bet', 'cancelBet']);
+  const fakeRaceService = jasmine.createSpyObj('RaceService', ['bet', 'cancelBet']);
   const race = { id: 1, name: 'Paris' } as RaceModel;
-  fakeRaceService.get.and.returnValue(of(race));
-  const fakeActivatedRoute = { snapshot: { paramMap: convertToParamMap({ raceId: 1 }) } };
+  const fakeActivatedRoute = { snapshot: { data: { race } } };
 
   beforeEach(() => TestBed.configureTestingModule({
     imports: [AppModule, RouterTestingModule],
@@ -127,11 +126,9 @@ describe('BetComponent', () => {
     const component = fixture.componentInstance;
     expect(component.raceModel).toBeUndefined();
 
-    fakeActivatedRoute.snapshot.paramMap = convertToParamMap({ raceId: 1 });
     component.ngOnInit();
 
-    expect(component.raceModel).toBe(race, '`ngOnInit` should initialize the `raceModel`');
-    expect(fakeRaceService.get).toHaveBeenCalledWith(1);
+    expect(component.raceModel).toEqual(race, '`ngOnInit` should initialize the `raceModel`');
   });
 
   it('should display an error message if bet failed', () => {

@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 
-import { RaceModel } from '../models/race.model';
-import { RaceService } from '../race.service';
 
 @Component({
   selector: 'pr-races',
@@ -10,14 +8,10 @@ import { RaceService } from '../race.service';
 })
 export class RacesComponent implements OnInit {
 
-  races: Array<RaceModel> = [];
-
-  constructor(private raceService: RaceService) { }
+  constructor() { }
 
   ngOnInit() {
-    this.raceService.list().subscribe(
-      data => this.races = data
-    );
+
   }
 
 }
