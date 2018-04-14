@@ -5,7 +5,7 @@ import { By } from '@angular/platform-browser';
 import { of } from 'rxjs/observable/of';
 import { _throw } from 'rxjs/observable/throw';
 
-import { AppModule } from '../app.module';
+import { RacesModule } from '../races/races.module';
 import { RaceService } from '../race.service';
 import { BetComponent } from './bet.component';
 import { PonyComponent } from '../pony/pony.component';
@@ -18,7 +18,7 @@ describe('BetComponent', () => {
   const fakeActivatedRoute = { snapshot: { data: { race } } };
 
   beforeEach(() => TestBed.configureTestingModule({
-    imports: [AppModule, RouterTestingModule],
+    imports: [RacesModule, RouterTestingModule],
     providers: [
       { provide: RaceService, useValue: fakeRaceService },
       { provide: ActivatedRoute, useValue: fakeActivatedRoute }

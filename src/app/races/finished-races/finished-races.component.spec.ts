@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { By } from '@angular/platform-browser';
 
 import { FinishedRacesComponent } from './finished-races.component';
-import { AppModule } from '../../app.module';
+import { RacesModule } from '../races.module';
 import { RaceComponent } from '../../race/race.component';
 
 describe('FinishedRacesComponent', () => {
@@ -23,7 +23,7 @@ describe('FinishedRacesComponent', () => {
   };
 
   beforeEach(() => TestBed.configureTestingModule({
-    imports: [AppModule, RouterTestingModule],
+    imports: [RacesModule, RouterTestingModule],
     providers: [{ provide: ActivatedRoute, useValue: activatedRoute }]
   }));
 

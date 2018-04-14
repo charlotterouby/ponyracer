@@ -2,7 +2,7 @@ import { async, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs/Subject';
 
-import { AppModule } from '../app.module';
+import { UsersModule } from '../users/users.module';
 import { LoginComponent } from './login.component';
 import { UserService } from '../user.service';
 
@@ -12,7 +12,7 @@ describe('LoginComponent', () => {
   const fakeUserService = jasmine.createSpyObj('UserService', ['authenticate']);
 
   beforeEach(() => TestBed.configureTestingModule({
-    imports: [AppModule],
+    imports: [UsersModule],
     providers: [
       { provide: UserService, useValue: fakeUserService },
       { provide: Router, useValue: fakeRouter }

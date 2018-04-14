@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { By } from '@angular/platform-browser';
 
 import { PendingRacesComponent } from './pending-races.component';
-import { AppModule } from '../../app.module';
+import { RacesModule } from '../races.module';
 import { RaceComponent } from '../../race/race.component';
 
 describe('PendingRacesComponent', () => {
@@ -23,7 +23,7 @@ describe('PendingRacesComponent', () => {
   };
 
   beforeEach(() => TestBed.configureTestingModule({
-    imports: [AppModule, RouterTestingModule],
+    imports: [RacesModule, RouterTestingModule],
     providers: [{ provide: ActivatedRoute, useValue: activatedRoute }]
   }));
 

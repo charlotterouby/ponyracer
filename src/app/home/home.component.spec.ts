@@ -38,11 +38,11 @@ describe('HomeComponent', () => {
     fixture.componentInstance.user = null;
     fixture.detectChanges();
 
-    const button = element.querySelector('a[href="/login"]');
+    const button = element.querySelector('a[href="/users/login"]');
     expect(button).not.toBeNull('You should have an `a` element to display the link to the login. Maybe you forgot to use `routerLink`?');
     expect(button.textContent).toContain('Login', 'The link should have a text');
 
-    const buttonRegister = element.querySelector('a[href="/register"]');
+    const buttonRegister = element.querySelector('a[href="/users/register"]');
     expect(buttonRegister)
       .not.toBeNull('You should have an `a` element to display the link to the register page. Maybe you forgot to use `routerLink`?');
     expect(buttonRegister.textContent).toContain('Register', 'The link should have a text');
