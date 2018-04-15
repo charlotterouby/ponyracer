@@ -11,6 +11,7 @@ import { BetComponent } from './bet.component';
 import { PonyComponent } from '../pony/pony.component';
 import { RaceModel } from '../models/race.model';
 import { PonyModel } from '../models/pony.model';
+import { AlertComponent } from '../shared/alert/alert.component';
 
 describe('BetComponent', () => {
   const fakeRaceService = jasmine.createSpyObj('RaceService', ['bet', 'cancelBet']);
@@ -146,9 +147,16 @@ describe('BetComponent', () => {
 
     fixture.detectChanges();
 
-    const element = fixture.nativeElement;
-    const message = element.querySelector('.alert.alert-danger');
-    expect(message.textContent).toContain('The race is already started or finished');
+    const debugElement = fixture.debugElement;
+    const message = debugElement.query(By.directive(AlertComponent));
+    expect(message).not.toBeNull('You should have an AlertComponent if the bet failed');
+    expect(message.nativeElement.textContent).toContain('The race is already started or finished');
+    expect(message.componentInstance.type).toBe('danger', 'The alert should be a danger one');
+
+    // close the alert
+    message.componentInstance.closeHandler();
+    fixture.detectChanges();
+    expect(debugElement.query(By.directive(AlertComponent))).toBeNull('The AlertComponent should be closable');
   });
 
   it('should cancel a bet', () => {

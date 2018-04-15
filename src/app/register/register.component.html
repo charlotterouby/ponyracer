@@ -1,12 +1,14 @@
 <form [formGroup]="userForm" (ngSubmit)="register()">
   <!-- input login -->
   <div class="form-group">
-    <label for="login">Login</label>
+    <label for="login" pr-form-label>Login</label>
     <input id="login" type="text" class="form-control" formControlName="login">
-    <!-- error required -->
-    <div *ngIf="loginCtrl.dirty && loginCtrl.hasError('required')" class="alert alert-danger">Login is required</div>
-    <!-- error minlength -->
-    <div id="login-length-error" *ngIf="loginCtrl.dirty && loginCtrl.hasError('minLength')" class="alert alert-danger">Your login should be at least 3 characters</div>
+    <div class="invalid-feedback">
+        <!-- error required -->
+      <span *ngIf="loginCtrl.hasError('required')">Login is required</span>
+      <!-- error minlength -->
+      <span id="login-length-error" *ngIf="loginCtrl.hasError('minLength')">Your login should be at least 3 characters</span>
+    </div>
   </div>
 
   <!-- form group passwordForm -->
@@ -14,36 +16,46 @@
 
     <!-- input password -->
     <div class="form-group">
-      <label for="password">Password</label>
+      <label for="password" pr-form-label>Password</label>
       <input id="password" type="password" class="form-control" formControlName="password">
       <!-- error required -->
-      <div *ngIf="passwordCtrl.dirty && passwordCtrl.hasError('required')" class="alert alert-danger">Password is required</div>
+      <div class="invalid-feedback" *ngIf="passwordCtrl.hasError('required')">
+        Password is required
+      </div>
     </div>
 
     <!-- input confirmPassword -->
     <div class="form-group">
-      <label for="confirmPassword">Confirm password</label>
+      <label for="confirmPassword" pr-form-label>Confirm password</label>
       <input id="confirmPassword" type="password" class="form-control" formControlName="confirmPassword">
       <!-- error required -->
-      <div *ngIf="confirmPasswordCtrl.dirty && confirmPasswordCtrl.hasError('required')" class="alert alert-danger">Password is required</div>
+      <div class="invalid-feedback" *ngIf="confirmPasswordCtrl.hasError('required')">
+        Password is required
+      </div>
     </div>
 
-    <!-- erreur matchingPassword -->
-    <div id="password-matching-error" *ngIf="passwordForm.dirty && passwordForm.hasError('matchingError')" class="alert alert-danger">Your password does not match</div>
+    <!-- error matchingPassword -->
+    <div class="d-block invalid-feedback" id="password-matching-error" *ngIf="passwordForm.dirty && passwordForm.hasError('matchingError')">
+      Your password does not match
+  </div>
   </section>
 
   <!-- input birthYear -->
   <div class="form-group">
-    <label for="birthYear">Birth Year</label>
+    <label for="birthYear" pr-form-label>Birth Year</label>
     <input id="birthYear" type="number" class="form-control" formControlName="birthYear">
-    <!-- error required -->
-    <div *ngIf="birthYearCtrl.dirty && birthYearCtrl.hasError('required')" class="alert alert-danger">Birth year is required</div>
-    <!-- error min / max -->
-    <div id="invalid-year-error" class="alert alert-danger" *ngIf="birthYearCtrl.dirty && (birthYearCtrl.hasError('min') || birthYearCtrl.hasError('max'))">This is not a valid year</div>
+    <div class="invalid-feedback"  >
+        <!-- error required -->
+      <span *ngIf="birthYearCtrl.hasError('required')">Birth year is required</span>
+      <!-- error min / max -->
+      <span id="invalid-year-error" *ngIf="birthYearCtrl.hasError('min') || birthYearCtrl.hasError('max')"> This is not a valid year</span>
+    </div>
   </div>
 
   <!-- erreur registration -->
-  <div id="registration-error" class="alert alert-danger" *ngIf="registrationFailed">Try again with another login.</div>
+  <pr-alert id="registration-error" type="danger" *ngIf="registrationFailed" [dismissible]="false">
+    Try again with another login.
+  </pr-alert>
 
   <!-- bouton submit -->
   <button type="submit" class="btn" [ngClass]="{'btn-primary': userForm.valid}" [disabled]="userForm.invalid">Let’s go!</button>

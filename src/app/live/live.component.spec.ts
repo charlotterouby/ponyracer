@@ -12,6 +12,7 @@ import { RaceService } from '../race.service';
 import { PonyWithPositionModel } from '../models/pony.model';
 import { RaceModel } from '../models/race.model';
 import { PonyComponent } from '../pony/pony.component';
+import { AlertComponent } from '../shared/alert/alert.component';
 
 describe('LiveComponent', () => {
 
@@ -329,12 +330,18 @@ describe('LiveComponent', () => {
     const sunnySunday = ponyComponents[0];
     expect(sunnySunday.componentInstance.isRunning).toBeFalsy('The ponies should be not running');
 
-    expect(element.textContent).toContain('You won your bet!');
+    const success = fixture.debugElement.query(By.directive(AlertComponent));
+    expect(success).not.toBeNull('You should have a success AlertComponent to display the bet won');
+    expect(success.nativeElement.textContent).toContain('You won your bet!');
+    expect(success.componentInstance.type).toBe('success', 'The alert should be a success one');
 
     // lost the bet...
     fixture.componentInstance.betWon = false;
     fixture.detectChanges();
-    expect(element.textContent).toContain('You lost your bet.');
+    const betFailed = fixture.debugElement.query(By.directive(AlertComponent));
+    expect(betFailed).not.toBeNull('You should have a warning AlertComponent to display the bet failed');
+    expect(betFailed.nativeElement.textContent).toContain('You lost your bet.');
+    expect(betFailed.componentInstance.type).toBe('warning', 'The alert should be a warning one');
 
     // no winners (race was already over)
     fixture.componentInstance.winners = [];
@@ -344,8 +351,15 @@ describe('LiveComponent', () => {
     // an error occurred
     fixture.componentInstance.error = true;
     fixture.detectChanges();
-    const alert = element.querySelector('div.alert.alert-danger');
-    expect(alert.textContent).toContain('A problem occurred during the live.');
+    const alert = debugElement.query(By.directive(AlertComponent));
+    expect(alert).not.toBeNull('You should have an AlertComponent to display the error');
+    expect(alert.nativeElement.textContent).toContain('A problem occurred during the live.');
+    expect(alert.componentInstance.type).toBe('danger', 'The alert should be a danger one');
+
+    // close the alert
+    alert.componentInstance.closeHandler();
+    fixture.detectChanges();
+    expect(debugElement.query(By.directive(AlertComponent))).not.toBeNull('The AlertComponent should not be closable');
   });
 
   it('should listen to click events on ponies in the template', () => {

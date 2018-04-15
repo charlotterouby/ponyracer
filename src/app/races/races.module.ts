@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { SharedModule } from '../shared/shared.module';
 
 import { RACES_ROUTES } from './races.routes';
 
@@ -21,7 +22,8 @@ import { FromNowPipe } from '../from-now.pipe';
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild(RACES_ROUTES)
+    RouterModule.forChild(RACES_ROUTES),
+    SharedModule
   ],
   declarations: [
     RacesComponent,

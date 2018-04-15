@@ -3,10 +3,9 @@
 
 <a class="btn btn-primary" [routerLink]="['/races', raceModel.id, 'live']">Watch live!</a>
 
-<div *ngIf="betFailed" class="alert alert-danger">
-  <button type="button" class="close" aria-label="Close" (click)="betFailed = false"><span aria-hidden="true">&#215;</span></button>
+<pr-alert *ngIf="betFailed" type="danger" (close)="betFailed = false">
   The race is already started or finished
-</div>
+</pr-alert>
 
 <div class="py-2">Click to bet on your favorite pony</div>
 <section class="row">
