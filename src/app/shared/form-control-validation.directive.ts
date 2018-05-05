@@ -1,4 +1,5 @@
-import { Directive, HostBinding } from '@angular/core';
+/* tslint:disable:directive-selector */
+import { ContentChild, Directive, HostBinding } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 @Directive({
@@ -11,7 +12,7 @@ export class FormControlValidationDirective {
 
   @HostBinding('class.is-invalid')
   get isInvalid() {
-    return this.ngControl && this.ngControl.dirty && this.ngControl.invalid ? true : false;
+    return this.ngControl && this.ngControl.dirty && this.ngControl.invalid;
   }
 
 }
