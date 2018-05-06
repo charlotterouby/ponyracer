@@ -7,6 +7,7 @@ import { environment } from '../environments/environment';
 import { UserModel } from './models/user.model';
 import { JwtInterceptorService } from './jwt-interceptor.service';
 import { WsService } from './ws.service';
+import { MoneyHistoryModel } from './models/money-history.model';
 
 @Injectable({
   providedIn: 'root'
@@ -86,5 +87,9 @@ export class UserService {
    */
   isLoggedIn(): boolean {
     return !!window.localStorage.getItem('rememberMe');
+  }
+
+  getMoneyHistory(): Observable<Array<MoneyHistoryModel>> {
+    return this.http.get<Array<MoneyHistoryModel>>(`${environment.baseUrl}/api/money/history`);
   }
 }

@@ -82,7 +82,8 @@ describe('MenuComponent', () => {
     fixture.detectChanges();
 
     const linksAfterLogin = fixture.debugElement.queryAll(By.directive(RouterLinkWithHref));
-    expect(linksAfterLogin.length).toBe(2, 'You should have two routerLink: one to the races, one to the home when the user is logged');
+    expect(linksAfterLogin.length)
+      .toBe(3, 'You should have three routerLink: one to the races, one to the home, one to the money history when the user is logged');
   });
 
   it('should listen to userEvents and score updates in ngOnInit', fakeAsync(() => {
@@ -136,11 +137,11 @@ describe('MenuComponent', () => {
     fixture.detectChanges();
 
     const element = fixture.nativeElement;
-    const info = element.querySelector('span.nav-item.navbar-text.mr-2');
+    const info = element.querySelector('a.nav-item.nav-link.mr-2');
     expect(info)
-      .not.toBeNull('You should have a `span` element with the classes `nav-item navbar-text mr-2` to display the user info');
-    expect(info.textContent).toContain('cedric', 'You should display the user\'s name in a `span` element');
-    expect(info.textContent).toContain('200', 'You should display the user\'s score in a `span` element');
+      .not.toBeNull('You should have an `a` element with the classes `nav-item nav-link mr-2` to display the user info');
+    expect(info.textContent).toContain('cedric', 'You should display the user\'s name in an `a` element');
+    expect(info.textContent).toContain('200', 'You should display the user\'s score in an `a` element');
   });
 
   it('should unsubscribe on destroy', () => {
