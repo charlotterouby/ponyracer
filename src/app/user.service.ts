@@ -1,21 +1,24 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { UserModel } from './models/user.model';
+
 import { environment } from '../environments/environment';
+import { UserModel } from './models/user.model';
 import { JwtInterceptorService } from './jwt-interceptor.service';
 import { WsService } from './ws.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class UserService {
 
-  userEvents: BehaviorSubject<UserModel> = new BehaviorSubject<UserModel>(undefined);
+  public userEvents = new BehaviorSubject<UserModel>(undefined);
 
-  constructor(private http: HttpClient, private jwtService: JwtInterceptorService, private wsService: WsService) {
+  constructor(private http: HttpClient, private jwtInterceptorService: JwtInterceptorService, private wsService: WsService) {
     this.retrieveUser();
   }
+
   /**
    * register a new user in Ponyracer API
    * @param login string
@@ -24,8 +27,8 @@ export class UserService {
    * @returns Observable<UserModel>
    */
   register(login: string, password: string, birthYear: number): Observable<UserModel> {
-    const params = { login, password, birthYear };
-    return this.http.post<UserModel>(`${environment.baseUrl}/api/users`, params);
+    const body = { login, password, birthYear };
+    return this.http.post<UserModel>(`${environment.baseUrl}/api/users`, body);
   }
 
   /**
@@ -44,21 +47,20 @@ export class UserService {
    * @param user the user logged in
    */
   storeLoggedInUser(user: UserModel) {
-    this.userEvents.next(user);
     window.localStorage.setItem('rememberMe', JSON.stringify(user));
-    this.jwtService.setJwtToken(user.token);
+    this.jwtInterceptorService.setJwtToken(user.token);
+    this.userEvents.next(user);
   }
 
   /**
    * retrieve the user stored in localStorage, emit userEvents with user retrieved, set token in JwtInterceptorService for authentification
    */
   retrieveUser() {
-    const userRememberMe = window.localStorage.getItem('rememberMe');
-
-    if (userRememberMe) {
-      const user: UserModel = JSON.parse(userRememberMe);
+    const value = window.localStorage.getItem('rememberMe');
+    if (value) {
+      const user = JSON.parse(value);
+      this.jwtInterceptorService.setJwtToken(user.token);
       this.userEvents.next(user);
-      this.jwtService.setJwtToken(user.token);
     }
   }
 
@@ -68,22 +70,21 @@ export class UserService {
   logout() {
     this.userEvents.next(null);
     window.localStorage.removeItem('rememberMe');
-    this.jwtService.removeJwtToken();
+    this.jwtInterceptorService.removeJwtToken();
   }
+
   /**
    * abonnement aux updates du score du user loggedIn via le WebSocket
    * @param userId number which is the id of the loggedIn user
    */
-  scoreUpdates(userId: number) {
-    return this.wsService.connect(`/player/${userId}`);
+  scoreUpdates(userId: number): Observable<UserModel> {
+    return this.wsService.connect<UserModel>(`/player/${userId}`);
   }
 
   /**
    * test si un user est connecté
    */
   isLoggedIn(): boolean {
-    const userRememberMe = window.localStorage.getItem('rememberMe');
-    return userRememberMe ? true : false;
+    return !!window.localStorage.getItem('rememberMe');
   }
-
 }

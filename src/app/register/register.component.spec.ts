@@ -3,8 +3,7 @@ import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { FormControl, FormGroup } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { of } from 'rxjs/observable/of';
-import { _throw } from 'rxjs/observable/throw';
+import { of, throwError } from 'rxjs';
 
 import { UsersModule } from '../users/users.module';
 import { RegisterComponent } from './register.component';
@@ -275,7 +274,7 @@ describe('RegisterComponent', () => {
     fixture.detectChanges();
 
     // given a form completed
-    fakeUserService.register.and.callFake(() => _throw(new Error('Oops')));
+    fakeUserService.register.and.callFake(() => throwError(new Error('Oops')));
     const component = fixture.componentInstance;
     component.loginCtrl.setValue('Cédric');
     component.passwordCtrl.setValue('password');

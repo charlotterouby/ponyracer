@@ -1,11 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { of } from 'rxjs/observable/of';
-import { switchMap, concat, catchError } from 'rxjs/operators';
+import { Subscription, concat, of, EMPTY } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
 
-import { UserService } from '../user.service';
 import { UserModel } from '../models/user.model';
-import { empty } from 'rxjs/observable/empty';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'pr-menu',
@@ -16,41 +15,33 @@ export class MenuComponent implements OnInit, OnDestroy {
 
   navbarCollapsed = true;
 
-  user: UserModel | null = null;
-  userEventsSubscription;
+  user: UserModel;
+  userEventsSubscription: Subscription;
 
-  constructor(private userService: UserService, private router: Router) { }
+  constructor(private userService: UserService, private router: Router) {
+  }
 
   ngOnInit() {
     this.userEventsSubscription = this.userService.userEvents.pipe(
-      switchMap((user: UserModel | null) => {
-        if (user && user.id) {
-          return of(user).pipe(
-            concat(this.userService.scoreUpdates(user.id).pipe(
-              catchError(() => empty())
-            ))
-          );
-        }
-        return of(null);
-      })
-    ).subscribe((user: UserModel | null) => this.user = user);
+      switchMap(user => user ?
+        concat(of(user), this.userService.scoreUpdates(user.id).pipe(catchError(() => EMPTY))) :
+        of(null)
+      ))
+      .subscribe(userWithScore => this.user = userWithScore);
   }
 
   ngOnDestroy() {
     if (this.userEventsSubscription) {
       this.userEventsSubscription.unsubscribe();
     }
-
   }
 
   toggleNavbar() {
     this.navbarCollapsed = !this.navbarCollapsed;
   }
 
-  logout(event) {
+  logout(event: Event) {
     event.preventDefault();
-    event.stopPropagation();
-
     this.userService.logout();
     this.router.navigate(['/']);
   }

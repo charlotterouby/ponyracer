@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
-import { Observable } from 'rxjs/Observable';
+import { Observable } from 'rxjs';
 import { map, takeWhile } from 'rxjs/operators';
 
 import { environment } from '../environments/environment';
-import { RaceModel } from './models/race.model';
+import { WsService } from './ws.service';
+import { RaceModel, LiveRaceModel } from './models/race.model';
 import { PonyWithPositionModel } from './models/pony.model';
 
-import { WsService } from './ws.service';
-
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class RaceService {
 
   constructor(private http: HttpClient, private wsService: WsService) { }
 
-/**
+  /**
    * get the list of the pending races
    * @param status string : le statut de la course 'PENDING' ou 'FINISHED'
    * @returns Observable<Array<RaceModel>>
@@ -32,11 +32,7 @@ export class RaceService {
    * @returns Observable<RaceModel>
    */
   bet(raceId: number, ponyId: number): Observable<RaceModel> {
-    if (!raceId || !ponyId) { return; }
-    const params = {
-      ponyId
-    };
-    return this.http.post<RaceModel>(`${environment.baseUrl}/api/races/${raceId}/bets`, params);
+    return this.http.post<RaceModel>(`${environment.baseUrl}/api/races/${raceId}/bets`, { ponyId });
   }
 
   /**
@@ -45,26 +41,24 @@ export class RaceService {
    * @returns Observable<RaceModel>
    */
   get(raceId: number): Observable<RaceModel> {
-    if (!raceId) { return; }
     return this.http.get<RaceModel>(`${environment.baseUrl}/api/races/${raceId}`);
   }
 
-/**
+  /**
    * cancel the bet on a race
    * @param raceId number which is the id of the race
    * @returns Observable without response if success
    */
-  cancelBet(raceId: number): Observable<any> {
-    if (!raceId) { return; }
-    return this.http.delete(`${environment.baseUrl}/api/races/${raceId}/bets`);
+  cancelBet(raceId: number): Observable<void> {
+    return this.http.delete<void>(`${environment.baseUrl}/api/races/${raceId}/bets`);
   }
 
   /**
    * get the list of ponies running in the race with their current position
    * @param raceId number wich is the id of the race
    */
-  live(raceId): Observable<Array<PonyWithPositionModel>> {
-    return this.wsService.connect(`/race/${raceId}`).pipe(
+  live(raceId: number): Observable<Array<PonyWithPositionModel>> {
+    return this.wsService.connect<LiveRaceModel>(`/race/${raceId}`).pipe(
       takeWhile(liveRace => liveRace.status !== 'FINISHED'),
       map(liveRace => liveRace.ponies)
     );
@@ -76,10 +70,7 @@ export class RaceService {
    * @param ponyId number wich is the id of the pony boosted
    */
   boost(raceId: number, ponyId: number) {
-    const params = {
-      ponyId
-    };
-    return this.http.post(`${environment.baseUrl}/api/races/${raceId}/boosts`, params);
+    return this.http.post(`${environment.baseUrl}/api/races/${raceId}/boosts`, { ponyId });
   }
 
 }

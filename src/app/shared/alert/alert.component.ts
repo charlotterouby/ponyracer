@@ -7,17 +7,16 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class AlertComponent {
 
-  @Input() type: 'success' | 'info' | 'warning' | 'danger' = 'warning';
   @Input() dismissible = true;
+  @Input() type = 'warning';
   @Output() close = new EventEmitter<void>();
 
-  constructor() { }
-
-  get alertClasses(): string {
-    return `alert alert-${this.type}`;
-  }
   closeHandler() {
     this.close.emit();
+  }
+
+  get alertClasses() {
+    return `alert alert-${this.type}`;
   }
 
 }

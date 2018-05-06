@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { AlertComponent } from './alert/alert.component';
 import { FormControlValidationDirective } from './form-control-validation.directive';
-import { FormLabelDirective } from './form-label.directive';
 import { FormLabelValidationDirective } from './form-label-validation.directive';
+import { FormLabelDirective } from './form-label.directive';
 
 @NgModule({
   imports: [
@@ -12,14 +13,15 @@ import { FormLabelValidationDirective } from './form-label-validation.directive'
   declarations: [
     AlertComponent,
     FormControlValidationDirective,
-    FormLabelDirective,
-    FormLabelValidationDirective
+    FormLabelValidationDirective,
+    FormLabelDirective
   ],
   exports: [
     AlertComponent,
     FormControlValidationDirective,
-    FormLabelDirective,
-    FormLabelValidationDirective
+    FormLabelValidationDirective,
+    FormLabelDirective
   ]
 })
-export class SharedModule { }
+export class SharedModule {
+}

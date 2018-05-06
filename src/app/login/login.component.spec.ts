@@ -1,7 +1,7 @@
 import { async, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { By } from '@angular/platform-browser';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 import { UsersModule } from '../users/users.module';
 import { LoginComponent } from './login.component';

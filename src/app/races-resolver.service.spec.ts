@@ -1,9 +1,7 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
-import { empty } from 'rxjs/observable/empty';
+import { Observable, of, EMPTY } from 'rxjs';
 
 import { RacesResolverService } from './races-resolver.service';
 import { RaceService } from './race.service';
@@ -14,7 +12,7 @@ import { RACES_ROUTES } from './races/races.routes';
 import { AppComponent } from './app.component';
 
 describe('RacesResolverService', () => {
-  let appComponentFixture;
+  let appComponentFixture: ComponentFixture<AppComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -37,7 +35,7 @@ describe('RacesResolverService', () => {
 
   it('should resolve races using the path of the activated route config ', () => {
     const raceService = TestBed.get(RaceService);
-    const expectedResult: Observable<Array<RaceModel>> = empty();
+    const expectedResult: Observable<Array<RaceModel>> = EMPTY;
 
     spyOn(raceService, 'list').and.returnValue(expectedResult);
 

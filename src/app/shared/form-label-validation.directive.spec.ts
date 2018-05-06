@@ -8,6 +8,7 @@ import { FormLabelDirective } from './form-label.directive';
 
 
 @Component({
+  selector: 'pr-form',
   template: `
     <form [formGroup]="userForm">
       <div class="form-group">

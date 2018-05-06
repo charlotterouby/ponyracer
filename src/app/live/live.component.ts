@@ -1,9 +1,6 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs/Subscription';
-import { Subject } from 'rxjs/Subject';
-import { interval } from 'rxjs/observable/interval';
-import { empty } from 'rxjs/observable/empty';
+import { Subject, Subscription, interval, EMPTY } from 'rxjs';
 import { bufferToggle, catchError, filter, groupBy, map, mergeMap, switchMap, throttleTime } from 'rxjs/operators';
 
 import { RaceService } from '../race.service';
@@ -18,14 +15,15 @@ import { PonyWithPositionModel } from '../models/pony.model';
 export class LiveComponent implements OnInit, OnDestroy {
 
   raceModel: RaceModel;
-  positionSubscription: Subscription;
   poniesWithPosition: Array<PonyWithPositionModel> = [];
-  error = false;
+  positionSubscription: Subscription;
+  error: boolean;
   winners: Array<PonyWithPositionModel> = [];
   betWon: boolean;
   clickSubject = new Subject<PonyWithPositionModel>();
 
-  constructor(private raceService: RaceService, private route: ActivatedRoute) { }
+  constructor(private raceService: RaceService, private route: ActivatedRoute) {
+  }
 
   ngOnInit() {
     this.raceModel = this.route.snapshot.data['race'];
@@ -33,9 +31,9 @@ export class LiveComponent implements OnInit, OnDestroy {
     if (this.raceModel.status !== 'FINISHED') {
       this.positionSubscription = this.raceService.live(this.raceModel.id)
         .subscribe(
-          listOfPonies => {
+          positions => {
+            this.poniesWithPosition = positions;
             this.raceModel.status = 'RUNNING';
-            this.poniesWithPosition = listOfPonies;
           },
           error => this.error = true,
           () => {
@@ -48,16 +46,14 @@ export class LiveComponent implements OnInit, OnDestroy {
 
     this.clickSubject.pipe(
       groupBy(pony => pony.id, pony => pony.id),
-      mergeMap(obs => obs.pipe(
-        bufferToggle(obs, () => interval(1000))
-      )),
+      mergeMap(obs => obs.pipe(bufferToggle(obs, () => interval(1000)))),
       filter(array => array.length >= 5),
       throttleTime(1000),
       map(array => array[0]),
       switchMap(ponyId => this.raceService.boost(this.raceModel.id, ponyId).pipe(
-        catchError(() => empty())
+        catchError(() => EMPTY)
       ))
-    ).subscribe(() => { });
+    ).subscribe(() => {});
   }
 
   ngOnDestroy() {

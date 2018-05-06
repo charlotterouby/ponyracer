@@ -1,23 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { SharedModule } from '../shared/shared.module';
 
-import { RACES_ROUTES } from './races.routes';
-
-import { RaceService } from '../race.service';
-import { RacesResolverService } from '../races-resolver.service';
-import { RaceResolverService } from '../race-resolver.service';
-
-import { RacesComponent } from './races.component';
-import { RaceComponent } from '../race/race.component';
-import { PonyComponent } from '../pony/pony.component';
-import { BetComponent } from '../bet/bet.component';
-import { LiveComponent } from '../live/live.component';
-import { PendingRacesComponent } from './pending-races/pending-races.component';
 import { FinishedRacesComponent } from './finished-races/finished-races.component';
-
+import { PendingRacesComponent } from './pending-races/pending-races.component';
+import { LiveComponent } from '../live/live.component';
+import { BetComponent } from '../bet/bet.component';
 import { FromNowPipe } from '../from-now.pipe';
+import { PonyComponent } from '../pony/pony.component';
+import { RaceComponent } from '../race/race.component';
+import { RacesComponent } from './races.component';
+import { RouterModule } from '@angular/router';
+import { RACES_ROUTES } from './races.routes';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
@@ -29,16 +23,12 @@ import { FromNowPipe } from '../from-now.pipe';
     RacesComponent,
     RaceComponent,
     PonyComponent,
+    FromNowPipe,
     BetComponent,
     LiveComponent,
     PendingRacesComponent,
-    FinishedRacesComponent,
-    FromNowPipe
-  ],
-  providers: [
-    RaceService,
-    RacesResolverService,
-    RaceResolverService
+    FinishedRacesComponent
   ]
 })
-export class RacesModule { }
+export class RacesModule {
+}

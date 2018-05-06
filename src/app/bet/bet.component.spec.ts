@@ -2,8 +2,7 @@ import { async, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
-import { of } from 'rxjs/observable/of';
-import { _throw } from 'rxjs/observable/throw';
+import { of, throwError } from 'rxjs';
 
 import { RacesModule } from '../races/races.module';
 import { RaceService } from '../race.service';
@@ -134,7 +133,7 @@ describe('BetComponent', () => {
 
   it('should display an error message if bet failed', () => {
     const fixture = TestBed.createComponent(BetComponent);
-    fakeRaceService.bet.and.callFake(() => _throw(new Error('Oops')));
+    fakeRaceService.bet.and.callFake(() => throwError(new Error('Oops')));
 
     const component = fixture.componentInstance;
     component.raceModel = { id: 2 } as RaceModel;
@@ -177,7 +176,7 @@ describe('BetComponent', () => {
     const fixture = TestBed.createComponent(BetComponent);
     fixture.detectChanges();
 
-    fakeRaceService.cancelBet.and.callFake(() => _throw(new Error('Oops')));
+    fakeRaceService.cancelBet.and.callFake(() => throwError(new Error('Oops')));
 
     const component = fixture.componentInstance;
     component.raceModel = { id: 2, betPonyId: 1, name: 'Lyon', ponies: [], startInstant: '2016-02-18T08:02:00Z' };

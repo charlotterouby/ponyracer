@@ -4,11 +4,12 @@ import { Component } from '@angular/core';
 import { AlertComponent } from './alert.component';
 
 @Component({
+  selector: 'pr-fake',
   template: `<pr-alert (close)="closed = true; event = $event">Hello</pr-alert>`
 })
 class FakeComponent {
   closed = false;
-  event = null;
+  event: Event = null;
 }
 
 describe('AlertComponent', () => {

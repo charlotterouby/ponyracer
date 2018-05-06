@@ -1,10 +1,10 @@
 /* tslint:disable:directive-selector */
-import { Directive, ContentChild, AfterContentInit } from '@angular/core';
+import { Directive, AfterContentInit, ContentChild } from '@angular/core';
 import { NgControl } from '@angular/forms';
+
 import { FormLabelDirective } from './form-label.directive';
 
 @Directive({
-  // tslint:disable-next-line:directive-selector
   selector: '.form-group'
 })
 export class FormLabelValidationDirective implements AfterContentInit {
@@ -14,8 +14,6 @@ export class FormLabelValidationDirective implements AfterContentInit {
 
   @ContentChild(FormLabelDirective)
   private label: FormLabelDirective;
-
-  constructor() { }
 
   ngAfterContentInit() {
     if (this.ngControl && this.label) {

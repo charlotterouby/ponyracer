@@ -1,4 +1,4 @@
-import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, fakeAsync, ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { NgModuleFactoryLoader } from '@angular/core';
@@ -10,7 +10,7 @@ import { AppComponent } from './app.component';
 import { RacesModule } from './races/races.module';
 
 describe('LoggedInGuard', () => {
-  let appComponentFixture;
+  let appComponentFixture: ComponentFixture<AppComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

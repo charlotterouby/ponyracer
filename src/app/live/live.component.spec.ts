@@ -2,9 +2,7 @@ import { async, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 import { By } from '@angular/platform-browser';
-import { Subject } from 'rxjs/Subject';
-import { of } from 'rxjs/observable/of';
-import { empty } from 'rxjs/observable/empty';
+import { Subject, of, EMPTY } from 'rxjs';
 
 import { RacesModule } from '../races/races.module';
 import { LiveComponent } from './live.component';
@@ -56,7 +54,7 @@ describe('LiveComponent', () => {
       startInstant: '2016-02-18T08:02:00Z'
     } as RaceModel;
     fakeActivatedRoute.snapshot = { data: { race } };
-    fakeRaceService.live.and.returnValue(empty());
+    fakeRaceService.live.and.returnValue(EMPTY);
 
     const liveComponent = new LiveComponent(fakeRaceService, fakeActivatedRoute);
     liveComponent.ngOnInit();
@@ -99,7 +97,7 @@ describe('LiveComponent', () => {
       startInstant: '2016-02-18T08:02:00Z'
     } as RaceModel;
     fakeActivatedRoute.snapshot = { data: { race } };
-    fakeRaceService.live.and.returnValue(empty());
+    fakeRaceService.live.and.returnValue(EMPTY);
 
     const liveComponent = new LiveComponent(fakeRaceService, fakeActivatedRoute);
     liveComponent.ngOnInit();

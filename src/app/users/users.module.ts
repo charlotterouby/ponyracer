@@ -2,26 +2,24 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { SharedModule } from '../shared/shared.module';
 
 import { USERS_ROUTES } from './users.routes';
-
-import { RegisterComponent } from '../register/register.component';
 import { LoginComponent } from '../login/login.component';
-
-
+import { RegisterComponent } from '../register/register.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild(USERS_ROUTES),
-    ReactiveFormsModule,
     FormsModule,
+    ReactiveFormsModule,
+    RouterModule.forChild(USERS_ROUTES),
     SharedModule
   ],
   declarations: [
-    LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    LoginComponent
   ]
 })
-export class UsersModule { }
+export class UsersModule {
+}

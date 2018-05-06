@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+
 import { UserService } from '../user.service';
 
 @Component({
@@ -9,54 +10,54 @@ import { UserService } from '../user.service';
   styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-  userForm: FormGroup;
-  passwordForm: FormGroup;
 
+  registrationFailed: boolean;
   loginCtrl: FormControl;
   passwordCtrl: FormControl;
   confirmPasswordCtrl: FormControl;
   birthYearCtrl: FormControl;
+  userForm: FormGroup;
+  passwordForm: FormGroup;
 
-  registrationFailed = false;
-
-  static passwordMatch(passwordFormGroup: FormGroup) {
-    const password = passwordFormGroup.get('password').value;
-    const confirm = passwordFormGroup.get('confirmPassword').value;
-    return password === confirm ? null : { matchingError: true };
+  static passwordMatch(control: FormGroup) {
+    const password = control.get('password').value;
+    const confirmPassword = control.get('confirmPassword').value;
+    return password !== confirmPassword ? { matchingError: true } : null;
   }
 
-  constructor(private fb: FormBuilder, private userService: UserService,  private router: Router) {
-    this.loginCtrl = fb.control('', [Validators.required, Validators.minLength(3)]);
-    this.passwordCtrl = fb.control('', Validators.required);
-    this.confirmPasswordCtrl = fb.control('', [Validators.required]);
-    this.birthYearCtrl = fb.control('', [Validators.required, Validators.min(1900), Validators.max(new Date().getFullYear())]);
+  constructor(private fb: FormBuilder, private userService: UserService, private router: Router) {
+  }
 
-    this.passwordForm = fb.group({
+  ngOnInit() {
+    this.loginCtrl = this.fb.control('', [Validators.required, Validators.minLength(3)]);
+    this.passwordCtrl = this.fb.control('', Validators.required);
+    this.confirmPasswordCtrl = this.fb.control('', Validators.required);
+    this.passwordForm = this.fb.group({
       password: this.passwordCtrl,
       confirmPassword: this.confirmPasswordCtrl
     }, {
       validator: RegisterComponent.passwordMatch
     });
-
-    this.userForm = fb.group({
+    this.birthYearCtrl = this.fb.control('', [
+      Validators.required,
+      Validators.min(1900),
+      Validators.max(new Date().getFullYear())
+    ]);
+    this.userForm = this.fb.group({
       login: this.loginCtrl,
       passwordForm: this.passwordForm,
       birthYear: this.birthYearCtrl
     });
   }
 
-  ngOnInit() { }
-
   register() {
-    const login = this.loginCtrl.value;
-    const pwd = this.passwordCtrl.value;
-    const birtdate = this.birthYearCtrl.value;
-
-    this.userService.register(login, pwd, birtdate).subscribe(
-      data => this.router.navigate(['/']),
-      error => {
-      this.registrationFailed = true;
-      }
+    this.userService.register(
+      this.userForm.value.login,
+      this.userForm.value.passwordForm.password,
+      this.userForm.value.birthYear
+    ).subscribe(
+      () => this.router.navigate(['/']),
+      () => this.registrationFailed = true
     );
   }
 

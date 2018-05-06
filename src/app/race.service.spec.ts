@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { Subject } from 'rxjs/Subject';
+import { Subject } from 'rxjs';
 
 import { environment } from '../environments/environment';
 import { RaceService } from './race.service';
@@ -17,8 +17,7 @@ describe('RaceService', () => {
   beforeEach(() => TestBed.configureTestingModule({
     imports: [HttpClientTestingModule],
     providers: [
-      { provide: WsService, useValue: wsService },
-      RaceService
+      { provide: WsService, useValue: wsService }
     ]
   }));
 
@@ -29,9 +28,9 @@ describe('RaceService', () => {
 
   it('should return an Observable of 3 races', () => {
     // fake response
-    const hardcodedRaces = [{ name: 'Paris' }, { name: 'Tokyo' }, { name: 'Lyon' }];
+    const hardcodedRaces = [{ name: 'Paris' }, { name: 'Tokyo' }, { name: 'Lyon' }] as Array<RaceModel>;
 
-    let actualRaces = [];
+    let actualRaces: Array<RaceModel> = [];
     raceService.list('PENDING').subscribe((races: Array<RaceModel>) => actualRaces = races);
 
     http.expectOne(`${environment.baseUrl}/api/races?status=PENDING`)

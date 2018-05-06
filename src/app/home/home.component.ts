@@ -1,6 +1,8 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { UserService } from '../user.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
+
 import { UserModel } from '../models/user.model';
+import { UserService } from '../user.service';
 
 @Component({
   selector: 'pr-home',
@@ -9,11 +11,11 @@ import { UserModel } from '../models/user.model';
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
-  user: UserModel | null = null;
-  userEventsSubscription;
+  user: UserModel;
+  userEventsSubscription: Subscription;
 
-
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService) {
+  }
 
   ngOnInit() {
     this.userEventsSubscription = this.userService.userEvents.subscribe(user => this.user = user);
@@ -23,6 +25,5 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.userEventsSubscription) {
       this.userEventsSubscription.unsubscribe();
     }
-
   }
 }

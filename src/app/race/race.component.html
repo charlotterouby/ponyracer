@@ -1,5 +1,9 @@
-<h2>{{ raceModel.name }}</h2>
-<p>{{ raceModel.startInstant | fromNow }}</p>
-<section class="row">
-    <pr-pony *ngFor="let pony of raceModel.ponies" [ponyModel]="pony" class="col-2"></pr-pony>
-</section>
+<div>
+  <h2>{{ raceModel.name }}</h2>
+  <p>{{ raceModel.startInstant | fromNow }}</p>
+  <div class="row">
+    <div *ngFor="let pony of raceModel.ponies" class="col-sm-2">
+      <pr-pony [ponyModel]="pony"></pr-pony>
+    </div>
+  </div>
+</div>

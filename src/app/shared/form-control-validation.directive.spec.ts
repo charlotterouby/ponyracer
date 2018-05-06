@@ -6,6 +6,7 @@ import { By } from '@angular/platform-browser';
 import { FormControlValidationDirective } from './form-control-validation.directive';
 
 @Component({
+  selector: 'pr-form',
   template: `
     <form [formGroup]="userForm">
       <div class="form-group row">

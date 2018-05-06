@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { ActivatedRouteSnapshot, Resolve, RouterStateSnapshot } from '@angular/router';
+import { Observable } from 'rxjs';
 
 import { RaceModel } from './models/race.model';
 import { RaceService } from './race.service';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class RacesResolverService implements Resolve<Array<RaceModel>> {
 
   constructor(private raceService: RaceService) { }

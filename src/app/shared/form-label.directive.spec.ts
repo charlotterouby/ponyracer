@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { FormLabelDirective } from './form-label.directive';
 
 @Component({
+  selector: 'pr-form',
   template: `<label prFormLabel for="lastName">Name</label>`
 })
 class FormComponent {

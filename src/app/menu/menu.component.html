@@ -1,25 +1,23 @@
 <nav class="navbar navbar-expand-md navbar-light bg-light">
-  <a href="" routerLink="/" class="navbar-brand">PonyRacer</a>
-  <!-- burger button mobile -->
-  <button type="button" class="navbar-toggler navbar-toggler-right" (click)="toggleNavbar()">
+  <a class="navbar-brand" routerLink="/">PonyRacer</a>
+  <button class="navbar-toggler" type="button" (click)="toggleNavbar()">
     <span class="navbar-toggler-icon"></span>
   </button>
-  <!-- items menu -->
   <div id="navbar" class="navbar-collapse" [class.collapse]="navbarCollapsed">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item" *ngIf="this.user">
-        <a href="" routerLink="/races" routerLinkActive="selected" class="nav-link">Races</a>
+      <li class="nav-item">
+        <a class="nav-link" *ngIf="user" routerLink="/races">Races</a>
       </li>
     </ul>
-    <div class="nav navbar-nav" *ngIf="this.user">
-      <span class="nav-item navbar-text mr-2">
+    <div class="nav navbar-nav">
+      <span class="nav-item navbar-text mr-2" *ngIf="user">
         {{ user.login }}
         <span class="fa fa-star"></span>
         {{ user.money }}
       </span>
-      <span class="nav-item nav-link">
-        <span class="fa fa-power-off" (click)="logout($event)"></span>
-      </span>
+      <a (click)="logout($event)" class="nav-item nav-link" href="#" *ngIf="user">
+        <span class="fa fa-power-off"></span>
+      </a>
     </div>
   </div>
 </nav>
