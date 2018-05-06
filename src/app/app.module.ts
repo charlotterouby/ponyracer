@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { PreloadAllModules, RouterModule } from '@angular/router';
 
@@ -18,7 +19,8 @@ import { JwtInterceptorService } from './jwt-interceptor.service';
   imports: [
     BrowserModule,
     HttpClientModule,
-    RouterModule.forRoot(ROUTES, { preloadingStrategy: PreloadAllModules })
+    RouterModule.forRoot(ROUTES, { preloadingStrategy: PreloadAllModules }),
+    NgbModule.forRoot()
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useExisting: JwtInterceptorService, multi: true }

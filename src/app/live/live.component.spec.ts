@@ -2,6 +2,7 @@ import { async, discardPeriodicTasks, fakeAsync, TestBed, tick } from '@angular/
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
 import { By } from '@angular/platform-browser';
+import { NgbAlert, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Subject, of, EMPTY } from 'rxjs';
 
 import { RacesModule } from '../races/races.module';
@@ -10,14 +11,13 @@ import { RaceService } from '../race.service';
 import { PonyWithPositionModel } from '../models/pony.model';
 import { RaceModel } from '../models/race.model';
 import { PonyComponent } from '../pony/pony.component';
-import { AlertComponent } from '../shared/alert/alert.component';
 
 describe('LiveComponent', () => {
 
   const fakeRaceService = jasmine.createSpyObj('RaceService', ['live', 'boost']);
 
   beforeEach(() => TestBed.configureTestingModule({
-    imports: [RacesModule, RouterTestingModule],
+    imports: [RacesModule, RouterTestingModule, NgbModule.forRoot()],
     providers: [
       { provide: RaceService, useValue: fakeRaceService }
     ]
@@ -328,16 +328,16 @@ describe('LiveComponent', () => {
     const sunnySunday = ponyComponents[0];
     expect(sunnySunday.componentInstance.isRunning).toBeFalsy('The ponies should be not running');
 
-    const success = fixture.debugElement.query(By.directive(AlertComponent));
-    expect(success).not.toBeNull('You should have a success AlertComponent to display the bet won');
+    const success = fixture.debugElement.query(By.directive(NgbAlert));
+    expect(success).not.toBeNull('You should have a success NgbAlert to display the bet won');
     expect(success.nativeElement.textContent).toContain('You won your bet!');
     expect(success.componentInstance.type).toBe('success', 'The alert should be a success one');
 
     // lost the bet...
     fixture.componentInstance.betWon = false;
     fixture.detectChanges();
-    const betFailed = fixture.debugElement.query(By.directive(AlertComponent));
-    expect(betFailed).not.toBeNull('You should have a warning AlertComponent to display the bet failed');
+    const betFailed = fixture.debugElement.query(By.directive(NgbAlert));
+    expect(betFailed).not.toBeNull('You should have a warning NgbAlert to display the bet failed');
     expect(betFailed.nativeElement.textContent).toContain('You lost your bet.');
     expect(betFailed.componentInstance.type).toBe('warning', 'The alert should be a warning one');
 
@@ -349,15 +349,15 @@ describe('LiveComponent', () => {
     // an error occurred
     fixture.componentInstance.error = true;
     fixture.detectChanges();
-    const alert = debugElement.query(By.directive(AlertComponent));
-    expect(alert).not.toBeNull('You should have an AlertComponent to display the error');
+    const alert = debugElement.query(By.directive(NgbAlert));
+    expect(alert).not.toBeNull('You should have an NgbAlert to display the error');
     expect(alert.nativeElement.textContent).toContain('A problem occurred during the live.');
     expect(alert.componentInstance.type).toBe('danger', 'The alert should be a danger one');
 
     // close the alert
     alert.componentInstance.closeHandler();
     fixture.detectChanges();
-    expect(debugElement.query(By.directive(AlertComponent))).not.toBeNull('The AlertComponent should not be closable');
+    expect(debugElement.query(By.directive(NgbAlert))).not.toBeNull('The NgbAlert should not be closable');
   });
 
   it('should listen to click events on ponies in the template', () => {

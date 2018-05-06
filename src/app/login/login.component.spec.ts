@@ -1,12 +1,12 @@
 import { async, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { By } from '@angular/platform-browser';
+import { NgbAlert, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { Subject } from 'rxjs';
 
 import { UsersModule } from '../users/users.module';
 import { LoginComponent } from './login.component';
 import { UserService } from '../user.service';
-import { AlertComponent } from '../shared/alert/alert.component';
 
 describe('LoginComponent', () => {
 
@@ -14,7 +14,7 @@ describe('LoginComponent', () => {
   const fakeUserService = jasmine.createSpyObj('UserService', ['authenticate']);
 
   beforeEach(() => TestBed.configureTestingModule({
-    imports: [UsersModule],
+    imports: [UsersModule, NgbModule.forRoot()],
     providers: [
       { provide: UserService, useValue: fakeUserService },
       { provide: Router, useValue: fakeRouter }
@@ -159,15 +159,14 @@ describe('LoginComponent', () => {
     fixture.detectChanges();
 
     const element = fixture.debugElement;
-    const alert = element.query(By.directive(AlertComponent));
-    expect(alert)
-      .not.toBeNull('You should have an AlertComponent to display an error message');
+    const alert = element.query(By.directive(NgbAlert));
+    expect(alert).not.toBeNull('You should have an NgbAlert to display an error message');
     expect(alert.nativeElement.textContent).toContain('Nope, try again');
     expect(alert.componentInstance.type).toBe('danger', 'The alert should be a danger one');
 
     // close the alert
     alert.componentInstance.closeHandler();
     fixture.detectChanges();
-    expect(element.query(By.directive(AlertComponent))).toBeNull('The alert should disappear when closed');
+    expect(element.query(By.directive(NgbAlert))).toBeNull('The alert should disappear when closed');
   });
 });
