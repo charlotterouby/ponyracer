@@ -1,32 +1,16 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { RouterLinkWithHref } from '@angular/router';
-import { By } from '@angular/platform-browser';
-import { Subject } from 'rxjs';
+import { TestBed } from '@angular/core/testing';
 
 import { AppModule } from '../app.module';
 import { MenuComponent } from './menu.component';
-import { UserService } from '../user.service';
-import { UserModel } from '../models/user.model';
 
 describe('MenuComponent', () => {
 
-  const fakeUserService = {
-    userEvents: new Subject<UserModel>(),
-    logout: () => {},
-    scoreUpdates: (userId: number) => {}
-  } as UserService;
-  const fakeRouter = jasmine.createSpyObj('Router', ['navigate']);
-
   beforeEach(() => TestBed.configureTestingModule({
-    imports: [AppModule, RouterTestingModule],
-    providers: [
-      { provide: UserService, useValue: fakeUserService }
-    ]
+    imports: [AppModule]
   }));
 
   it('should have a `navbarCollapsed` field', () => {
-    const menu: MenuComponent = new MenuComponent(fakeUserService, fakeRouter);
+    const menu: MenuComponent = new MenuComponent();
     menu.ngOnInit();
     expect(menu.navbarCollapsed)
       .toBe(true, 'Check that `navbarCollapsed` is initialized with `true`.' +
@@ -34,14 +18,14 @@ describe('MenuComponent', () => {
   });
 
   it('should have a `toggleNavbar` method', () => {
-    const menu: MenuComponent = new MenuComponent(fakeUserService, fakeRouter);
+    const menu: MenuComponent = new MenuComponent();
     expect(menu.toggleNavbar)
       .not.toBeNull('Maybe you forgot to declare a `toggleNavbar()` method');
 
     menu.toggleNavbar();
 
     expect(menu.navbarCollapsed)
-      .toBe(false, '`toggleNavbar()` should change `navbarCollapsed` from true to false`');
+      .toBe(false, '`toggleNavbar()` should change `navbarCollapsed` from `true` to `false`');
 
     menu.toggleNavbar();
 
@@ -68,116 +52,5 @@ describe('MenuComponent', () => {
     const navbar = element.querySelector('#navbar');
     expect(navbar.classList).not
       .toContain('collapse', 'The element with the id `#navbar` should have not the class `collapse` after a click');
-  });
-
-  it('should use routerLink to navigate', () => {
-    const fixture = TestBed.createComponent(MenuComponent);
-
-    fixture.detectChanges();
-
-    const links = fixture.debugElement.queryAll(By.directive(RouterLinkWithHref));
-    expect(links.length).toBe(1, 'You should have only one routerLink to the home when the user is not logged');
-
-    fixture.componentInstance.user = { login: 'cedric', money: 200 } as UserModel;
-    fixture.detectChanges();
-
-    const linksAfterLogin = fixture.debugElement.queryAll(By.directive(RouterLinkWithHref));
-    expect(linksAfterLogin.length)
-      .toBe(3, 'You should have three routerLink: one to the races, one to the home, one to the money history when the user is logged');
-  });
-
-  it('should listen to userEvents and score updates in ngOnInit', fakeAsync(() => {
-    const component = new MenuComponent(fakeUserService, fakeRouter);
-    component.ngOnInit();
-
-    // emulate a login
-    const fakeScoreUpdates = new Subject<UserModel>();
-    spyOn(fakeUserService, 'scoreUpdates').and.returnValue(fakeScoreUpdates);
-    const user = { id: 1, login: 'cedric', money: 200 } as UserModel;
-    fakeUserService.userEvents.next(user);
-    tick();
-
-    expect(component.user).toBe(user, 'Your component should listen to the `userEvents` observable on login');
-    expect(fakeUserService.scoreUpdates).toHaveBeenCalledWith(user.id);
-    tick();
-
-    // emulate a score update
-    user.money = 300;
-    fakeScoreUpdates.next(user);
-    tick();
-
-    expect(component.user.money).toBe(300, 'Your component should listen to the `scoreUpdates` observable');
-
-    // emulate an error
-    fakeScoreUpdates.error('You should catch potential errors on score updates with a `.catch()`');
-    tick();
-    expect(component.user.money).toBe(300, 'Your component should catch error on score updates');
-
-    // emulate a score update
-    user.money = 400;
-    fakeScoreUpdates.next(user);
-    tick();
-
-    expect(component.user.money).toBe(400, 'Your component should catch error on score updates');
-
-    // emulate a logout
-    fakeUserService.userEvents.next(null);
-    tick();
-
-    expect(component.user).toBe(null, 'Your component should listen to the `userEvents` observable on logout');
-  }));
-
-  it('should display the user if logged', () => {
-    const fixture = TestBed.createComponent(MenuComponent);
-    fixture.detectChanges();
-
-    const component = fixture.componentInstance;
-    component.user = { login: 'cedric', money: 200 } as UserModel;
-
-    fixture.detectChanges();
-
-    const element = fixture.nativeElement;
-    const info = element.querySelector('a.nav-item.nav-link.mr-2');
-    expect(info)
-      .not.toBeNull('You should have an `a` element with the classes `nav-item nav-link mr-2` to display the user info');
-    expect(info.textContent).toContain('cedric', 'You should display the user\'s name in an `a` element');
-    expect(info.textContent).toContain('200', 'You should display the user\'s score in an `a` element');
-  });
-
-  it('should unsubscribe on destroy', () => {
-    const component = new MenuComponent(fakeUserService, fakeRouter);
-    component.ngOnInit();
-    spyOn(component.userEventsSubscription, 'unsubscribe');
-    component.ngOnDestroy();
-
-    expect(component.userEventsSubscription.unsubscribe).toHaveBeenCalled();
-  });
-
-  it('should display a logout button', () => {
-    const fixture = TestBed.createComponent(MenuComponent);
-    const component = fixture.componentInstance;
-    component.user = { login: 'cedric', money: 200 } as UserModel;
-    fixture.detectChanges();
-    spyOn(fixture.componentInstance, 'logout');
-
-    const element = fixture.nativeElement;
-    const logout = element.querySelector('span.fa-power-off');
-    expect(logout).not.toBeNull('You should have a span element with a class `fa-power-off` to log out');
-    logout.dispatchEvent(new Event('click', { bubbles: true }));
-
-    fixture.detectChanges();
-    expect(fixture.componentInstance.logout).toHaveBeenCalled();
-  });
-
-  it('should stop the click event propagation', () => {
-    const component = new MenuComponent(fakeUserService, fakeRouter);
-    const event = new Event('click');
-    spyOn(fakeUserService, 'logout');
-    spyOn(event, 'preventDefault');
-    component.logout(event);
-
-    expect(fakeUserService.logout).toHaveBeenCalled();
-    expect(event.preventDefault).toHaveBeenCalled();
-    expect(fakeRouter.navigate).toHaveBeenCalledWith(['/']);
   });
 });

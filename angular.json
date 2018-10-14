@@ -78,7 +78,7 @@
               "**/app.module.ts"
             ],
             "styles": [
-              "styles.css"
+              "src/styles.css"
             ],
             "scripts": [],
             "assets": [
@@ -110,6 +110,11 @@
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
             "devServerTarget": "ponyracer:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "ponyracer:serve:production"
+            }
           }
         },
         "lint": {

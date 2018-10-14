@@ -27,12 +27,18 @@ module.exports = function (config) {
       stdout: false,
       outputFile: '../results/karma-results.json'
     },
-    reporters: ['progress', 'json', 'kjhtml'],
+    reporters: process.env.CI === 'true' ? ['dots', 'json'] : ['progress', 'json', 'kjhtml'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers: ['Chrome'],
+    browsers:  process.env.CI === 'true' ? ['ChromeHeadlessNoSandbox'] : ['Chrome'],
+    customLaunchers: {
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox'] // required for Travis CI
+      }
+    },
     singleRun: false
   });
 };

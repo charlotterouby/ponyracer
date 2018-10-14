@@ -4,6 +4,7 @@
   ],
   "rules": {
     "arrow-return-shorthand": true,
+    "ban-comma-operator": true,
     "callable-types": true,
     "class-name": true,
     "comment-format": [
@@ -15,6 +16,7 @@
       "severity": "warn"
     },
     "eofline": true,
+    "file-name-casing": [true, "kebab-case"],
     "forin": true,
     "import-blacklist": true,
     "import-spacing": true,
@@ -54,9 +56,12 @@
     "no-debugger": true,
     "no-duplicate-imports": true,
     "no-duplicate-super": true,
+    "no-duplicate-switch-case": true,
+    "no-dynamic-delete": true,
     "no-empty": false,
     "no-empty-interface": true,
     "no-eval": true,
+    "no-implicit-dependencies": [true, "dev"],
     "no-import-side-effect": [
       true,
       {
@@ -67,8 +72,11 @@
       true,
       "ignore-params"
     ],
+    "no-redundant-jsdoc": true,
     "no-misused-new": true,
     "no-non-null-assertion": true,
+    "no-parameter-reassignment": true,
+    "no-return-await": true,
     "no-shadowed-variable": true,
     "no-string-literal": false,
     "no-string-throw": true,
@@ -88,6 +96,7 @@
       "check-whitespace"
     ],
     "prefer-const": true,
+    "prefer-while": true,
     "quotemark": [
       true,
       "single"
@@ -131,6 +140,8 @@
     "no-input-rename": true,
     "no-output-on-prefix": true,
     "no-output-rename": true,
+    "no-queries-parameter": true,
+    "prefer-inline-decorator": true,
     "template-conditional-complexity": true,
     "template-cyclomatic-complexity": [true, 10],
     "templates-no-negated-async": true,

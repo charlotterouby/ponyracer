@@ -1,31 +1,20 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { PreloadAllModules, RouterModule } from '@angular/router';
 
-import { ROUTES } from './app.routes';
 import { AppComponent } from './app.component';
 import { MenuComponent } from './menu/menu.component';
-import { HomeComponent } from './home/home.component';
-import { JwtInterceptorService } from './jwt-interceptor.service';
+import { RacesComponent } from './races/races.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MenuComponent,
-    HomeComponent
+    RacesComponent
   ],
   imports: [
-    BrowserModule,
-    HttpClientModule,
-    RouterModule.forRoot(ROUTES, { preloadingStrategy: PreloadAllModules }),
-    NgbModule.forRoot()
+    BrowserModule
   ],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useExisting: JwtInterceptorService, multi: true }
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule { }
