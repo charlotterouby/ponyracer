@@ -6,16 +6,16 @@
   <div id="navbar" class="navbar-collapse" [class.collapse]="navbarCollapsed">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link" *ngIf="user" routerLink="/races">Races</a>
+        <a class="nav-link" *ngIf="userEvents | async  as u" routerLink="/races">Races</a>
       </li>
     </ul>
     <div class="nav navbar-nav">
-      <a class="nav-item nav-link mr-2" *ngIf="user" routerLink="/users/money/history">
-        {{ user.login }}
+      <a class="nav-item nav-link mr-2" *ngIf="userEvents | async  as u" routerLink="/users/money/history">
+        {{ u.login }}
         <span class="fa fa-star"></span>
-        {{ user.money }}
+        {{ u.money }}
       </a>
-      <a (click)="logout($event)" class="nav-item nav-link" href="#" *ngIf="user">
+      <a (click)="logout($event)" class="nav-item nav-link" href="#" *ngIf="userEvents | async  as u">
         <span class="fa fa-power-off"></span>
       </a>
     </div>

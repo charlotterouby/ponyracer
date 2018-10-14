@@ -57,9 +57,18 @@ describe('FinishedRacesComponent', () => {
     fixture.componentInstance.page = 2;
     fixture.detectChanges();
 
+    // expect to not change as we are using OnPush
     const raceNamesPage2 = debugElement.queryAll(By.directive(RaceComponent));
-    expect(raceNamesPage2.length).toBe(2, 'You should have 2 `RaceComponent` displayed on the 2nd page, as the test uses 12 races');
-    expect(raceNamesPage2[0].componentInstance.raceModel.name).toBe('Berlin', 'You should display the second page races');
+    expect(raceNamesPage2.length).toBe(10, 'You should still have 10 `RaceComponent` displayed on the 2nd page, as we are using OnPush');
+
+    // expect to change when an event is fired
+    pageLinks[1].dispatchEvent(new Event('click'));
+    fixture.detectChanges();
+
+    const raceNamesPage2AfterClick = debugElement.queryAll(By.directive(RaceComponent));
+    expect(raceNamesPage2AfterClick.length)
+      .toBe(2, 'You should have 2 `RaceComponent` displayed on the 2nd page, as the test uses 12 races');
+    expect(raceNamesPage2AfterClick[0].componentInstance.raceModel.name).toBe('Berlin', 'You should display the second page races');
   });
 
   it('should not display a link to bet on a race', () => {

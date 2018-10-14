@@ -1,7 +1,7 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Subscription, concat, of, EMPTY } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
+import { concat, of, EMPTY, Observable } from 'rxjs';
+import { catchError, switchMap, shareReplay } from 'rxjs/operators';
 
 import { UserModel } from '../models/user.model';
 import { UserService } from '../user.service';
@@ -9,31 +9,24 @@ import { UserService } from '../user.service';
 @Component({
   selector: 'pr-menu',
   templateUrl: './menu.component.html',
-  styleUrls: ['./menu.component.css']
+  styleUrls: [ './menu.component.css' ],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MenuComponent implements OnInit, OnDestroy {
-
+export class MenuComponent implements OnInit {
   navbarCollapsed = true;
 
-  user: UserModel;
-  userEventsSubscription: Subscription;
+  userEvents: Observable<UserModel>;
 
-  constructor(private userService: UserService, private router: Router) {
-  }
+  constructor(private userService: UserService, private router: Router) {}
 
   ngOnInit() {
-    this.userEventsSubscription = this.userService.userEvents.pipe(
-      switchMap(user => user ?
-        concat(of(user), this.userService.scoreUpdates(user.id).pipe(catchError(() => EMPTY))) :
-        of(null)
-      ))
-      .subscribe(userWithScore => this.user = userWithScore);
-  }
-
-  ngOnDestroy() {
-    if (this.userEventsSubscription) {
-      this.userEventsSubscription.unsubscribe();
-    }
+    this.userEvents = this.userService.userEvents.pipe(
+      switchMap(
+        (user) =>
+          user ? concat(of(user), this.userService.scoreUpdates(user.id).pipe(catchError(() => EMPTY))) : of(null)
+      ),
+      shareReplay(1)
+    );
   }
 
   toggleNavbar() {
@@ -43,7 +36,6 @@ export class MenuComponent implements OnInit, OnDestroy {
   logout(event: Event) {
     event.preventDefault();
     this.userService.logout();
-    this.router.navigate(['/']);
+    this.router.navigate([ '/' ]);
   }
-
 }
