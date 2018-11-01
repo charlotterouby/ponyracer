@@ -71,16 +71,14 @@ describe('MenuComponent', () => {
   });
 
   it('should use routerLink to navigate', () => {
-    const fakeScoreUpdates = new Subject<UserModel>();
-    spyOn(fakeUserService, 'scoreUpdates').and.returnValue(fakeScoreUpdates);
-
     const fixture = TestBed.createComponent(MenuComponent);
 
     fixture.detectChanges();
 
     const links = fixture.debugElement.queryAll(By.directive(RouterLinkWithHref));
     expect(links.length).toBe(1, 'You should have only one routerLink to the home when the user is not logged');
-    fakeUserService.userEvents.next({ login: 'cedric', money: 200 } as UserModel);
+
+    fixture.componentInstance.user = { login: 'cedric', money: 200 } as UserModel;
     fixture.detectChanges();
 
     const linksAfterLogin = fixture.debugElement.queryAll(By.directive(RouterLinkWithHref));
@@ -96,12 +94,10 @@ describe('MenuComponent', () => {
     const fakeScoreUpdates = new Subject<UserModel>();
     spyOn(fakeUserService, 'scoreUpdates').and.returnValue(fakeScoreUpdates);
     const user = { id: 1, login: 'cedric', money: 200 } as UserModel;
-    let userEvent: UserModel = null;
-    component.userEvents.subscribe(event => userEvent = event);
     fakeUserService.userEvents.next(user);
     tick();
-    expect(userEvent).toBe(user, 'Your component should listen to the `userEvents` observable on login');
 
+    expect(component.user).toBe(user, 'Your component should listen to the `userEvents` observable on login');
     expect(fakeUserService.scoreUpdates).toHaveBeenCalledWith(user.id);
     tick();
 
@@ -110,34 +106,33 @@ describe('MenuComponent', () => {
     fakeScoreUpdates.next(user);
     tick();
 
-    expect(userEvent.money).toBe(300, 'Your component should listen to the `scoreUpdates` observable');
+    expect(component.user.money).toBe(300, 'Your component should listen to the `scoreUpdates` observable');
 
     // emulate an error
     fakeScoreUpdates.error('You should catch potential errors on score updates with a `.catch()`');
     tick();
-    expect(userEvent.money).toBe(300, 'Your component should catch error on score updates');
+    expect(component.user.money).toBe(300, 'Your component should catch error on score updates');
 
     // emulate a score update
     user.money = 400;
     fakeScoreUpdates.next(user);
     tick();
 
-    expect(userEvent.money).toBe(400, 'Your component should catch error on score updates');
+    expect(component.user.money).toBe(400, 'Your component should catch error on score updates');
 
     // emulate a logout
     fakeUserService.userEvents.next(null);
     tick();
 
-    expect(userEvent).toBe(null, 'Your component should listen to the `userEvents` observable on logout');
+    expect(component.user).toBe(null, 'Your component should listen to the `userEvents` observable on logout');
   }));
 
   it('should display the user if logged', () => {
-    const fakeScoreUpdates = new Subject<UserModel>();
-    spyOn(fakeUserService, 'scoreUpdates').and.returnValue(fakeScoreUpdates);
-
     const fixture = TestBed.createComponent(MenuComponent);
     fixture.detectChanges();
-    fakeUserService.userEvents.next({ login: 'cedric', money: 200 } as UserModel);
+
+    const component = fixture.componentInstance;
+    component.user = { login: 'cedric', money: 200 } as UserModel;
 
     fixture.detectChanges();
 
@@ -149,13 +144,19 @@ describe('MenuComponent', () => {
     expect(info.textContent).toContain('200', 'You should display the user\'s score in an `a` element');
   });
 
-  it('should display a logout button', () => {
-    const fakeScoreUpdates = new Subject<UserModel>();
-    spyOn(fakeUserService, 'scoreUpdates').and.returnValue(fakeScoreUpdates);
+  it('should unsubscribe on destroy', () => {
+    const component = new MenuComponent(fakeUserService, fakeRouter);
+    component.ngOnInit();
+    spyOn(component.userEventsSubscription, 'unsubscribe');
+    component.ngOnDestroy();
 
+    expect(component.userEventsSubscription.unsubscribe).toHaveBeenCalled();
+  });
+
+  it('should display a logout button', () => {
     const fixture = TestBed.createComponent(MenuComponent);
-    fixture.detectChanges();
-    fakeUserService.userEvents.next({ login: 'cedric', money: 200 } as UserModel);
+    const component = fixture.componentInstance;
+    component.user = { login: 'cedric', money: 200 } as UserModel;
     fixture.detectChanges();
     spyOn(fixture.componentInstance, 'logout');
 
