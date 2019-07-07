@@ -1,5 +1,4 @@
 import { fakeAsync, ComponentFixture, TestBed, tick } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { Observable, of, EMPTY } from 'rxjs';
 
@@ -16,18 +15,12 @@ describe('RacesResolverService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        AppModule,
-        RacesModule,
-        RouterTestingModule
-      ]
+      imports: [AppModule, RacesModule]
     });
 
     // override the lazy loaded module
     const router: Router = TestBed.get(Router);
-    router.resetConfig([
-      { path: 'races', children: RACES_ROUTES },
-    ]);
+    router.resetConfig([{ path: 'races', children: RACES_ROUTES }]);
 
     appComponentFixture = TestBed.createComponent(AppComponent);
     appComponentFixture.detectChanges();
@@ -45,7 +38,9 @@ describe('RacesResolverService', () => {
     } as ActivatedRouteSnapshot;
     const result = resolver.resolve(routeSnapshot, undefined);
 
-    expect(result).toBe(expectedResult, 'The resolver should return the races');
+    expect(result)
+      .withContext('The resolver should return the races')
+      .toBe(expectedResult);
     expect(raceService.list).toHaveBeenCalledWith('FINISHED');
   });
 

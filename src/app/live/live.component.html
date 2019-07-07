@@ -1,5 +1,5 @@
 <div>
-  <h2>{{ raceModel.name }}</h2>
+  <h1>{{ raceModel.name }}</h1>
   <ngb-alert [dismissible]="false" type="danger" *ngIf="error">A problem occurred during the live.</ngb-alert>
   <div id="live-race" [ngSwitch]="raceModel.status">
     <div *ngSwitchCase="'FINISHED'">
@@ -29,7 +29,13 @@
         <span class="fa fa-flag" style="font-size: x-large;"></span>
       </div>
       <div style="width: 95%; border-right: 3px dotted lightgray;">
-        <div *ngFor="let pony of poniesWithPosition trackBy ponyById" class="pony-wrapper" [class.selected]="pony.id === raceModel.betPonyId" [style.marginLeft.%]="pony.position - 5" style="transition: all linear 1s">
+        <div
+          *ngFor="let pony of poniesWithPosition; trackBy: ponyById"
+          class="pony-wrapper"
+          [class.selected]="pony.id === raceModel.betPonyId"
+          [style.marginLeft.%]="pony.position - 5"
+          style="transition: all linear 1s"
+        >
           <pr-pony [ponyModel]="pony" [isRunning]="true" [isBoosted]="pony.boosted" (ponyClicked)="onClick(pony)"></pr-pony>
         </div>
       </div>

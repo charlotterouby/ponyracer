@@ -7,21 +7,8 @@ import { FormLabelValidationDirective } from './form-label-validation.directive'
 import { FormLabelDirective } from './form-label.directive';
 
 @NgModule({
-  imports: [
-    CommonModule
-  ],
-  declarations: [
-    FormControlValidationDirective,
-    FormLabelValidationDirective,
-    FormLabelDirective
-  ],
-  exports: [
-    FormControlValidationDirective,
-    FormLabelValidationDirective,
-    FormLabelDirective,
-    NgbAlertModule,
-    NgbPaginationModule,
-  ]
+  imports: [CommonModule],
+  declarations: [FormControlValidationDirective, FormLabelValidationDirective, FormLabelDirective],
+  exports: [FormControlValidationDirective, FormLabelValidationDirective, FormLabelDirective, NgbAlertModule, NgbPaginationModule]
 })
-export class SharedModule {
-}
+export class SharedModule {}

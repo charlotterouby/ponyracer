@@ -1,7 +1,7 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { concat, of, EMPTY, Observable } from 'rxjs';
-import { catchError, switchMap, shareReplay } from 'rxjs/operators';
+import { Observable, concat, of, EMPTY } from 'rxjs';
+import { catchError, shareReplay, switchMap } from 'rxjs/operators';
 
 import { UserModel } from '../models/user.model';
 import { UserService } from '../user.service';
@@ -9,7 +9,7 @@ import { UserService } from '../user.service';
 @Component({
   selector: 'pr-menu',
   templateUrl: './menu.component.html',
-  styleUrls: [ './menu.component.css' ],
+  styleUrls: ['./menu.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MenuComponent implements OnInit {
@@ -21,11 +21,8 @@ export class MenuComponent implements OnInit {
 
   ngOnInit() {
     this.userEvents = this.userService.userEvents.pipe(
-      switchMap(
-        (user) =>
-          user ? concat(of(user), this.userService.scoreUpdates(user.id).pipe(catchError(() => EMPTY))) : of(null)
-      ),
-      shareReplay(1)
+      switchMap(user => (user ? concat(of(user), this.userService.scoreUpdates(user.id).pipe(catchError(() => EMPTY))) : of(null))),
+      shareReplay()
     );
   }
 
@@ -36,6 +33,6 @@ export class MenuComponent implements OnInit {
   logout(event: Event) {
     event.preventDefault();
     this.userService.logout();
-    this.router.navigate([ '/' ]);
+    this.router.navigate(['/']);
   }
 }

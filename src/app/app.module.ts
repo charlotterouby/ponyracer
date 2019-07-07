@@ -11,11 +11,7 @@ import { HomeComponent } from './home/home.component';
 import { JwtInterceptorService } from './jwt-interceptor.service';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    MenuComponent,
-    HomeComponent
-  ],
+  declarations: [AppComponent, MenuComponent, HomeComponent],
   imports: [
     BrowserModule,
     HttpClientModule,
@@ -23,10 +19,7 @@ import { JwtInterceptorService } from './jwt-interceptor.service';
     NgbAlertModule,
     NgbPaginationModule
   ],
-  providers: [
-    { provide: HTTP_INTERCEPTORS, useExisting: JwtInterceptorService, multi: true }
-  ],
+  providers: [{ provide: HTTP_INTERCEPTORS, useExisting: JwtInterceptorService, multi: true }],
   bootstrap: [AppComponent]
 })
-export class AppModule {
-}
+export class AppModule {}

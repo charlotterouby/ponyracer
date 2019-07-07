@@ -2,31 +2,38 @@ import { async, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BehaviorSubject } from 'rxjs';
 
-import { AppModule } from '../app.module';
 import { HomeComponent } from './home.component';
 import { UserModel } from '../models/user.model';
 import { UserService } from '../user.service';
 
 describe('HomeComponent', () => {
-
   const fakeUserService = { userEvents: new BehaviorSubject<UserModel>(undefined) } as UserService;
 
-  beforeEach(() => TestBed.configureTestingModule({
-    imports: [AppModule, RouterTestingModule]
-  }));
+  beforeEach(() =>
+    TestBed.configureTestingModule({
+      imports: [RouterTestingModule],
+      declarations: [HomeComponent],
+      providers: [{ provide: UserService, useValue: fakeUserService }]
+    })
+  );
 
   it('display the title and quote', () => {
     const fixture = TestBed.createComponent(HomeComponent);
     const element = fixture.nativeElement;
 
     const title = element.querySelector('h1');
-    expect(title).not.toBeNull('You should have an `h1` element to display the title');
+    expect(title)
+      .withContext('You should have an `h1` element to display the title')
+      .not.toBeNull();
     expect(title.textContent).toContain('Ponyracer');
     expect(title.textContent)
-      .toContain('Always a pleasure to bet on ponies', 'You should have the `small` element inside the `h1` element');
+      .withContext('You should have the `small` element inside the `h1` element')
+      .toContain('Always a pleasure to bet on ponies');
 
     const subtitle = element.querySelector('small');
-    expect(subtitle).not.toBeNull('You should have a `small` element to display the subtitle');
+    expect(subtitle)
+      .withContext('You should have a `small` element to display the subtitle')
+      .not.toBeNull();
     expect(subtitle.textContent).toContain('Always a pleasure to bet on ponies');
   });
 
@@ -39,13 +46,20 @@ describe('HomeComponent', () => {
     fixture.detectChanges();
 
     const button = element.querySelector('a[href="/users/login"]');
-    expect(button).not.toBeNull('You should have an `a` element to display the link to the login. Maybe you forgot to use `routerLink`?');
-    expect(button.textContent).toContain('Login', 'The link should have a text');
+    expect(button)
+      .withContext('You should have an `a` element to display the link to the login. Maybe you forgot to use `routerLink`?')
+      .not.toBeNull();
+    expect(button.textContent)
+      .withContext('The link should have a text')
+      .toContain('Login');
 
     const buttonRegister = element.querySelector('a[href="/users/register"]');
     expect(buttonRegister)
-      .not.toBeNull('You should have an `a` element to display the link to the register page. Maybe you forgot to use `routerLink`?');
-    expect(buttonRegister.textContent).toContain('Register', 'The link should have a text');
+      .withContext('You should have an `a` element to display the link to the register page. Maybe you forgot to use `routerLink`?')
+      .not.toBeNull();
+    expect(buttonRegister.textContent)
+      .withContext('The link should have a text')
+      .toContain('Register');
   });
 
   it('should listen to userEvents in ngOnInit', async(() => {
@@ -57,7 +71,9 @@ describe('HomeComponent', () => {
     fakeUserService.userEvents.next(user);
 
     fakeUserService.userEvents.subscribe(() => {
-      expect(component.user).toBe(user, 'Your component should listen to the `userEvents` observable');
+      expect(component.user)
+        .withContext('Your component should listen to the `userEvents` observable')
+        .toBe(user);
     });
   }));
 
@@ -79,7 +95,11 @@ describe('HomeComponent', () => {
 
     const element = fixture.nativeElement;
     const button = element.querySelector('a[href="/races"]');
-    expect(button).not.toBeNull('The link should lead to the races if the user is logged');
-    expect(button.textContent).toContain('Races', 'The first link should lead to the races if the user is logged');
+    expect(button)
+      .withContext('The link should lead to the races if the user is logged')
+      .not.toBeNull();
+    expect(button.textContent)
+      .withContext('The first link should lead to the races if the user is logged')
+      .toContain('Races');
   });
 });

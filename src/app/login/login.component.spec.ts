@@ -9,17 +9,15 @@ import { LoginComponent } from './login.component';
 import { UserService } from '../user.service';
 
 describe('LoginComponent', () => {
-
   const fakeRouter = jasmine.createSpyObj('Router', ['navigate']);
   const fakeUserService = jasmine.createSpyObj('UserService', ['authenticate']);
 
-  beforeEach(() => TestBed.configureTestingModule({
-    imports: [UsersModule, NgbAlertModule],
-    providers: [
-      { provide: UserService, useValue: fakeUserService },
-      { provide: Router, useValue: fakeRouter }
-    ]
-  }));
+  beforeEach(() =>
+    TestBed.configureTestingModule({
+      imports: [UsersModule, NgbAlertModule],
+      providers: [{ provide: UserService, useValue: fakeUserService }, { provide: Router, useValue: fakeRouter }]
+    })
+  );
 
   beforeEach(() => {
     fakeRouter.navigate.calls.reset();
@@ -35,11 +33,14 @@ describe('LoginComponent', () => {
     // then we should have a field credentials
     const componentInstance = fixture.componentInstance;
     expect(componentInstance.credentials)
-      .not.toBeNull('Your component should have a field `credentials` initialized with an object');
+      .withContext('Your component should have a field `credentials` initialized with an object')
+      .not.toBeNull();
     expect(componentInstance.credentials.login)
-      .toBe('', 'The `login` field of `credentials` should be initialized with an empty string');
+      .withContext('The `login` field of `credentials` should be initialized with an empty string')
+      .toBe('');
     expect(componentInstance.credentials.password)
-      .toBe('', 'The `password` field of `credentials` should be initialized with an empty string');
+      .withContext('The `password` field of `credentials` should be initialized with an empty string')
+      .toBe('');
   });
 
   it('should have a title', () => {
@@ -50,8 +51,12 @@ describe('LoginComponent', () => {
 
     // then we should have a title
     const element = fixture.nativeElement;
-    expect(element.querySelector('h1')).not.toBeNull('The template should have a `h1` tag');
-    expect(element.querySelector('h1').textContent).toContain('Log in', 'The title should be `Log in`');
+    expect(element.querySelector('h1'))
+      .withContext('The template should have a `h1` tag')
+      .not.toBeNull();
+    expect(element.querySelector('h1').textContent)
+      .withContext('The title should be `Log in`')
+      .toContain('Log in');
   });
 
   it('should have a disabled button if the form is incomplete', async(() => {
@@ -65,8 +70,12 @@ describe('LoginComponent', () => {
 
     fixture.whenStable().then(() => {
       fixture.detectChanges();
-      expect(element.querySelector('button')).not.toBeNull('The template should have a button');
-      expect(element.querySelector('button').hasAttribute('disabled')).toBe(true, 'The button should be disabled if the form is invalid');
+      expect(element.querySelector('button'))
+        .withContext('The template should have a button')
+        .not.toBeNull();
+      expect(element.querySelector('button').hasAttribute('disabled'))
+        .withContext('The button should be disabled if the form is invalid')
+        .toBe(true);
     });
   }));
 
@@ -79,11 +88,15 @@ describe('LoginComponent', () => {
 
     fixture.whenStable().then(() => {
       const loginInput = element.querySelector('input[name="login"]');
-      expect(loginInput).not.toBeNull('You should have an input with the name `login`');
+      expect(loginInput)
+        .withContext('You should have an input with the name `login`')
+        .not.toBeNull();
       loginInput.value = 'login';
       loginInput.dispatchEvent(new Event('input'));
       const passwordInput = element.querySelector('input[name="password"]');
-      expect(passwordInput).not.toBeNull('You should have an input with the name `password`');
+      expect(passwordInput)
+        .withContext('You should have an input with the name `password`')
+        .not.toBeNull();
       passwordInput.value = 'password';
       passwordInput.dispatchEvent(new Event('input'));
 
@@ -92,7 +105,54 @@ describe('LoginComponent', () => {
 
       // then we should have a submit button enabled
       expect(element.querySelector('button').hasAttribute('disabled'))
-        .toBe(false, 'The button should be enabled if the form is valid');
+        .withContext('The button should be enabled if the form is valid')
+        .toBe(false);
+    });
+  }));
+
+  it('should display error messages if fields are dirty and invalid', async(() => {
+    const fixture = TestBed.createComponent(LoginComponent);
+
+    // when we trigger the change detection
+    fixture.detectChanges();
+
+    // then we should have error fields
+    const element = fixture.nativeElement;
+
+    fixture.whenStable().then(() => {
+      const loginInput = element.querySelector('input[name="login"]');
+      expect(loginInput)
+        .withContext('You should have an input with the name `login`')
+        .not.toBeNull();
+      loginInput.value = 'login';
+      loginInput.dispatchEvent(new Event('input'));
+      loginInput.value = '';
+      loginInput.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+      const loginError = element.querySelector('div.form-group div');
+      expect(loginError)
+        .withContext('You should have an error message if the login field is required and dirty')
+        .not.toBeNull();
+      expect(loginError.textContent)
+        .withContext('The error message for the login field is incorrect')
+        .toBe('Login is required');
+
+      const passwordInput = element.querySelector('input[name="password"]');
+      expect(passwordInput)
+        .withContext('You should have an input with the name `password`')
+        .not.toBeNull();
+      passwordInput.value = 'password';
+      passwordInput.dispatchEvent(new Event('input'));
+      passwordInput.value = '';
+      passwordInput.dispatchEvent(new Event('input'));
+      fixture.detectChanges();
+      const passwordError = element.querySelector('div.form-group div');
+      expect(passwordError)
+        .withContext('You should have an error message if the password field is required and dirty')
+        .not.toBeNull();
+      expect(passwordError.textContent)
+        .withContext('The error message for the password field is incorrect')
+        .toBe('Login is required');
     });
   }));
 
@@ -119,9 +179,9 @@ describe('LoginComponent', () => {
     subject.next('');
     // and redirect to the home
     expect(componentInstance.authenticationFailed)
-      .toBe(false, 'You should have a field `authenticationFailed` set to false if registration succeeded');
+      .withContext('You should have a field `authenticationFailed` set to false if registration succeeded')
+      .toBe(false);
     expect(fakeRouter.navigate).toHaveBeenCalledWith(['/']);
-
   });
 
   it('should call the user service and display a message if failed', () => {
@@ -148,7 +208,8 @@ describe('LoginComponent', () => {
     // and not redirect to the home
     expect(fakeRouter.navigate).not.toHaveBeenCalled();
     expect(componentInstance.authenticationFailed)
-      .toBe(true, 'You should have a field `authenticationFailed` set to true if registration failed');
+      .withContext('You should have a field `authenticationFailed` set to true if registration failed')
+      .toBe(true);
   });
 
   it('should display a message if auth failed', () => {
@@ -160,13 +221,19 @@ describe('LoginComponent', () => {
 
     const element = fixture.debugElement;
     const alert = element.query(By.directive(NgbAlert));
-    expect(alert).not.toBeNull('You should have an NgbAlert to display an error message');
+    expect(alert)
+      .withContext('You should have an NgbAlert to display an error message')
+      .not.toBeNull();
     expect(alert.nativeElement.textContent).toContain('Nope, try again');
-    expect(alert.componentInstance.type).toBe('danger', 'The alert should be a danger one');
+    expect(alert.componentInstance.type)
+      .withContext('The alert should be a danger one')
+      .toBe('danger');
 
     // close the alert
     alert.componentInstance.closeHandler();
     fixture.detectChanges();
-    expect(element.query(By.directive(NgbAlert))).toBeNull('The alert should disappear when closed');
+    expect(element.query(By.directive(NgbAlert)))
+      .withContext('The alert should disappear when closed')
+      .toBeNull();
   });
 });

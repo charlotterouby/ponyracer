@@ -1,16 +1,17 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RaceModel } from '../../models/race.model';
 
 @Component({
-  selector: 'pr-pending-races',
   templateUrl: './pending-races.component.html',
   styleUrls: ['./pending-races.component.css']
 })
-export class PendingRacesComponent {
+export class PendingRacesComponent implements OnInit {
   races: Array<RaceModel>;
 
-  constructor(route: ActivatedRoute) {
-    this.races = route.snapshot.data['races'];
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit() {
+    this.races = this.route.snapshot.data.races;
   }
 }

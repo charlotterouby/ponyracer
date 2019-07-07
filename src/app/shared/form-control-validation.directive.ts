@@ -6,12 +6,9 @@ import { NgControl } from '@angular/forms';
   selector: '.form-control'
 })
 export class FormControlValidationDirective {
+  constructor(private ngControl: NgControl) {}
 
-  constructor(private ngControl: NgControl) {
-  }
-
-  @HostBinding('class.is-invalid')
-  get isInvalid() {
+  @HostBinding('class.is-invalid') get isInvalid() {
     return this.ngControl && this.ngControl.dirty && this.ngControl.invalid;
   }
 }

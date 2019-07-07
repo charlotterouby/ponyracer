@@ -3,7 +3,6 @@ import { HttpHandler, HttpRequest } from '@angular/common/http';
 import { JwtInterceptorService } from './jwt-interceptor.service';
 
 describe('JwtInterceptorService', () => {
-
   it('should do nothing if no jwt token', () => {
     const jwtService = new JwtInterceptorService();
     const req = new HttpRequest('GET', '/');

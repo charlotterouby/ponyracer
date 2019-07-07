@@ -12,10 +12,11 @@ import { FormControlValidationDirective } from './form-control-validation.direct
       <div class="form-group row">
         <label for="lastName" class="col-sm-2 col-form-label">Name</label>
         <div class="col-sm-10">
-          <input class="form-control" id="lastName" placeholder="Name" formControlName="lastName">
+          <input class="form-control" id="lastName" placeholder="Name" formControlName="lastName" />
         </div>
       </div>
-    </form>`
+    </form>
+  `
 })
 class FormComponent {
   userForm = new FormGroup({
@@ -24,18 +25,21 @@ class FormComponent {
 }
 
 describe('FormControlValidationDirective', () => {
-
-  beforeEach(() => TestBed.configureTestingModule({
-    imports: [ReactiveFormsModule],
-    declarations: [FormComponent, FormControlValidationDirective]
-  }));
+  beforeEach(() =>
+    TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule],
+      declarations: [FormComponent, FormControlValidationDirective]
+    })
+  );
 
   it('should add the is-invalid CSS class', () => {
     const fixture = TestBed.createComponent(FormComponent);
     fixture.detectChanges();
 
     const directive = fixture.debugElement.query(By.directive(FormControlValidationDirective));
-    expect(directive).not.toBeNull('The directive should be applied to an element with a class form-control');
+    expect(directive)
+      .withContext('The directive should be applied to an element with a class form-control')
+      .not.toBeNull();
 
     const lastName = fixture.nativeElement.querySelector('#lastName');
     lastName.value = '';

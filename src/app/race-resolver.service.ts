@@ -9,8 +9,7 @@ import { RaceService } from './race.service';
   providedIn: 'root'
 })
 export class RaceResolverService implements Resolve<RaceModel> {
-
-  constructor(private raceService: RaceService) { }
+  constructor(private raceService: RaceService) {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<RaceModel> {
     const raceId = +route.paramMap.get('raceId');

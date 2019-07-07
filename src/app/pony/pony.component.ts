@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 import { PonyModel } from '../models/pony.model';
 
@@ -9,23 +9,20 @@ import { PonyModel } from '../models/pony.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PonyComponent implements OnInit {
-
   @Input() ponyModel: PonyModel;
   @Input() isRunning: boolean;
   @Input() isBoosted: boolean;
-  @Output() ponyClicked = new EventEmitter<PonyModel>();
+  @Output() readonly ponyClicked = new EventEmitter<PonyModel>();
 
   constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   getPonyImageUrl() {
-    return `assets/images/pony-${this.ponyModel.color.toLowerCase()}${ this.isBoosted ? '-rainbow' : this.isRunning ? '-running' : ''}.gif`;
+    return `assets/images/pony-${this.ponyModel.color.toLowerCase()}${this.isBoosted ? '-rainbow' : this.isRunning ? '-running' : ''}.gif`;
   }
 
   clicked() {
     this.ponyClicked.emit(this.ponyModel);
   }
-
 }

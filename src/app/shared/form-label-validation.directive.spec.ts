@@ -6,7 +6,6 @@ import { By } from '@angular/platform-browser';
 import { FormLabelValidationDirective } from './form-label-validation.directive';
 import { FormLabelDirective } from './form-label.directive';
 
-
 @Component({
   selector: 'pr-form',
   template: `
@@ -14,10 +13,11 @@ import { FormLabelDirective } from './form-label.directive';
       <div class="form-group">
         <label prFormLabel for="lastName">Name</label>
         <div>
-          <input class="form-control" id="lastName" placeholder="Name" formControlName="lastName">
+          <input class="form-control" id="lastName" placeholder="Name" formControlName="lastName" />
         </div>
       </div>
-    </form>`
+    </form>
+  `
 })
 class FormComponent {
   userForm = new FormGroup({
@@ -26,30 +26,37 @@ class FormComponent {
 }
 
 describe('FormLabelValidationDirective', () => {
-
-  beforeEach(() => TestBed.configureTestingModule({
-    imports: [ReactiveFormsModule],
-    declarations: [FormComponent, FormLabelValidationDirective, FormLabelDirective]
-  }));
+  beforeEach(() =>
+    TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule],
+      declarations: [FormComponent, FormLabelValidationDirective, FormLabelDirective]
+    })
+  );
 
   it('should switch the field isInvalid from the FormLabelDirective if invalid', () => {
     const fixture = TestBed.createComponent(FormComponent);
     fixture.detectChanges();
 
     const directiveInstance = fixture.debugElement.query(By.directive(FormLabelDirective)).injector.get(FormLabelDirective);
-    expect(directiveInstance.isInvalid).toBe(false, 'The directive should let isInvalid to false if the field is not dirty');
+    expect(directiveInstance.isInvalid)
+      .withContext('The directive should let isInvalid to false if the field is not dirty')
+      .toBe(false);
 
     const lastName = fixture.nativeElement.querySelector('#lastName');
     lastName.value = '';
     lastName.dispatchEvent(new Event('input'));
     fixture.detectChanges();
 
-    expect(directiveInstance.isInvalid).toBe(true, 'The directive should switch isInvalid to true if the field is invalid');
+    expect(directiveInstance.isInvalid)
+      .withContext('The directive should switch isInvalid to true if the field is invalid')
+      .toBe(true);
 
     lastName.value = 'Raindow';
     lastName.dispatchEvent(new Event('input'));
     fixture.detectChanges();
 
-    expect(directiveInstance.isInvalid).toBe(false, 'The directive should switch isInvalid to false if the field is valid');
+    expect(directiveInstance.isInvalid)
+      .withContext('The directive should switch isInvalid to false if the field is valid')
+      .toBe(false);
   });
 });

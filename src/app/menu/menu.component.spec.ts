@@ -4,13 +4,11 @@ import { RouterLinkWithHref } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { Subject } from 'rxjs';
 
-import { AppModule } from '../app.module';
 import { MenuComponent } from './menu.component';
 import { UserService } from '../user.service';
 import { UserModel } from '../models/user.model';
 
 describe('MenuComponent', () => {
-
   const fakeUserService = {
     userEvents: new Subject<UserModel>(),
     logout: () => {},
@@ -18,35 +16,41 @@ describe('MenuComponent', () => {
   } as UserService;
   const fakeRouter = jasmine.createSpyObj('Router', ['navigate']);
 
-  beforeEach(() => TestBed.configureTestingModule({
-    imports: [AppModule, RouterTestingModule],
-    providers: [
-      { provide: UserService, useValue: fakeUserService }
-    ]
-  }));
+  beforeEach(() =>
+    TestBed.configureTestingModule({
+      imports: [RouterTestingModule],
+      declarations: [MenuComponent],
+      providers: [{ provide: UserService, useValue: fakeUserService }]
+    })
+  );
 
   it('should have a `navbarCollapsed` field', () => {
     const menu: MenuComponent = new MenuComponent(fakeUserService, fakeRouter);
     menu.ngOnInit();
     expect(menu.navbarCollapsed)
-      .toBe(true, 'Check that `navbarCollapsed` is initialized with `true`.' +
-        'Maybe you forgot to declare `navbarCollapsed` in your component.');
+      .withContext(
+        'Check that `navbarCollapsed` is initialized with `true`.' + 'Maybe you forgot to declare `navbarCollapsed` in your component.'
+      )
+      .toBe(true);
   });
 
   it('should have a `toggleNavbar` method', () => {
     const menu: MenuComponent = new MenuComponent(fakeUserService, fakeRouter);
     expect(menu.toggleNavbar)
-      .not.toBeNull('Maybe you forgot to declare a `toggleNavbar()` method');
+      .withContext('Maybe you forgot to declare a `toggleNavbar()` method')
+      .not.toBeNull();
 
     menu.toggleNavbar();
 
     expect(menu.navbarCollapsed)
-      .toBe(false, '`toggleNavbar()` should change `navbarCollapsed` from `true` to `false`');
+      .withContext('`toggleNavbar()` should change `navbarCollapsed` from `true` to `false`')
+      .toBe(false);
 
     menu.toggleNavbar();
 
     expect(menu.navbarCollapsed)
-      .toBe(true, '`toggleNavbar()` should change `navbarCollapsed` from false to true`');
+      .withContext('`toggleNavbar()` should change `navbarCollapsed` from false to true`')
+      .toBe(true);
   });
 
   it('should toggle the class on click', () => {
@@ -56,18 +60,25 @@ describe('MenuComponent', () => {
     fixture.detectChanges();
 
     const navbarCollapsed = element.querySelector('#navbar');
-    expect(navbarCollapsed).not.toBeNull('No element with the id `#navbar`');
-    expect(navbarCollapsed.classList).toContain('collapse', 'The element with the id `#navbar` should have the class `collapse`');
+    expect(navbarCollapsed)
+      .withContext('No element with the id `#navbar`')
+      .not.toBeNull();
+    expect(navbarCollapsed.classList)
+      .withContext('The element with the id `#navbar` should have the class `collapse`')
+      .toContain('collapse');
 
     const button = element.querySelector('button');
-    expect(button).not.toBeNull('No `button` element to collapse the menu');
+    expect(button)
+      .withContext('No `button` element to collapse the menu')
+      .not.toBeNull();
     button.dispatchEvent(new Event('click'));
 
     fixture.detectChanges();
 
     const navbar = element.querySelector('#navbar');
-    expect(navbar.classList).not
-      .toContain('collapse', 'The element with the id `#navbar` should have not the class `collapse` after a click');
+    expect(navbar.classList)
+      .withContext('The element with the id `#navbar` should have not the class `collapse` after a click')
+      .not.toContain('collapse');
   });
 
   it('should use routerLink to navigate', () => {
@@ -79,13 +90,16 @@ describe('MenuComponent', () => {
     fixture.detectChanges();
 
     const links = fixture.debugElement.queryAll(By.directive(RouterLinkWithHref));
-    expect(links.length).toBe(1, 'You should have only one routerLink to the home when the user is not logged');
+    expect(links.length)
+      .withContext('You should have only one routerLink to the home when the user is not logged')
+      .toBe(1);
     fakeUserService.userEvents.next({ login: 'cedric', money: 200 } as UserModel);
     fixture.detectChanges();
 
     const linksAfterLogin = fixture.debugElement.queryAll(By.directive(RouterLinkWithHref));
     expect(linksAfterLogin.length)
-      .toBe(3, 'You should have three routerLink: one to the races, one to the home, one to the money history when the user is logged');
+      .withContext('You should have three routerLink: one to the races, one to the home, one to the money history when the user is logged')
+      .toBe(3);
   });
 
   it('should listen to userEvents and score updates in ngOnInit', fakeAsync(() => {
@@ -97,10 +111,12 @@ describe('MenuComponent', () => {
     spyOn(fakeUserService, 'scoreUpdates').and.returnValue(fakeScoreUpdates);
     const user = { id: 1, login: 'cedric', money: 200 } as UserModel;
     let userEvent: UserModel = null;
-    component.userEvents.subscribe(event => userEvent = event);
+    component.userEvents.subscribe(event => (userEvent = event));
     fakeUserService.userEvents.next(user);
     tick();
-    expect(userEvent).toBe(user, 'Your component should listen to the `userEvents` observable on login');
+    expect(userEvent)
+      .withContext('Your component should listen to the `userEvents` observable on login')
+      .toBe(user);
 
     expect(fakeUserService.scoreUpdates).toHaveBeenCalledWith(user.id);
     tick();
@@ -110,25 +126,33 @@ describe('MenuComponent', () => {
     fakeScoreUpdates.next(user);
     tick();
 
-    expect(userEvent.money).toBe(300, 'Your component should listen to the `scoreUpdates` observable');
+    expect(userEvent.money)
+      .withContext('Your component should listen to the `scoreUpdates` observable')
+      .toBe(300);
 
     // emulate an error
     fakeScoreUpdates.error('You should catch potential errors on score updates with a `.catch()`');
     tick();
-    expect(userEvent.money).toBe(300, 'Your component should catch error on score updates');
+    expect(userEvent.money)
+      .withContext('Your component should catch error on score updates')
+      .toBe(300);
 
     // emulate a score update
     user.money = 400;
     fakeScoreUpdates.next(user);
     tick();
 
-    expect(userEvent.money).toBe(400, 'Your component should catch error on score updates');
+    expect(userEvent.money)
+      .withContext('Your component should catch error on score updates')
+      .toBe(400);
 
     // emulate a logout
     fakeUserService.userEvents.next(null);
     tick();
 
-    expect(userEvent).toBe(null, 'Your component should listen to the `userEvents` observable on logout');
+    expect(userEvent)
+      .withContext('Your component should listen to the `userEvents` observable on logout')
+      .toBe(null);
   }));
 
   it('should display the user if logged', () => {
@@ -144,9 +168,14 @@ describe('MenuComponent', () => {
     const element = fixture.nativeElement;
     const info = element.querySelector('a.nav-item.nav-link.mr-2');
     expect(info)
-      .not.toBeNull('You should have an `a` element with the classes `nav-item nav-link mr-2` to display the user info');
-    expect(info.textContent).toContain('cedric', 'You should display the user\'s name in an `a` element');
-    expect(info.textContent).toContain('200', 'You should display the user\'s score in an `a` element');
+      .withContext('You should have an `a` element with the classes `nav-item nav-link mr-2` to display the user info')
+      .not.toBeNull();
+    expect(info.textContent)
+      .withContext('You should display the name of the user in an `a` element')
+      .toContain('cedric');
+    expect(info.textContent)
+      .withContext('You should display the score of the user in an `a` element')
+      .toContain('200');
   });
 
   it('should display a logout button', () => {
@@ -161,7 +190,9 @@ describe('MenuComponent', () => {
 
     const element = fixture.nativeElement;
     const logout = element.querySelector('span.fa-power-off');
-    expect(logout).not.toBeNull('You should have a span element with a class `fa-power-off` to log out');
+    expect(logout)
+      .withContext('You should have a span element with a class `fa-power-off` to log out')
+      .not.toBeNull();
     logout.dispatchEvent(new Event('click', { bubbles: true }));
 
     fixture.detectChanges();

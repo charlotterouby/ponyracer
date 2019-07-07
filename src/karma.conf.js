@@ -1,7 +1,7 @@
 // Karma configuration file, see link for more information
 // https://karma-runner.github.io/1.0/config/configuration-file.html
 
-module.exports = function (config) {
+module.exports = function(config) {
   config.set({
     basePath: '',
     browserNoActivityTimeout: 30000,
@@ -20,7 +20,7 @@ module.exports = function (config) {
     },
     coverageIstanbulReporter: {
       dir: require('path').join(__dirname, '../coverage'),
-      reports: [ 'html', 'json-summary'],
+      reports: ['html', 'json-summary'],
       fixWebpackSourcePaths: true
     },
     jsonReporter: {
@@ -32,7 +32,7 @@ module.exports = function (config) {
     colors: true,
     logLevel: config.LOG_INFO,
     autoWatch: true,
-    browsers:  process.env.CI === 'true' ? ['ChromeHeadlessNoSandbox'] : ['Chrome'],
+    browsers: process.env.CI === 'true' ? ['ChromeHeadlessNoSandbox'] : ['Chrome'],
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
         base: 'ChromeHeadless',

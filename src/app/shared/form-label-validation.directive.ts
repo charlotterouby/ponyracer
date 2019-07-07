@@ -8,10 +8,9 @@ import { FormLabelDirective } from './form-label.directive';
   selector: '.form-group'
 })
 export class FormLabelValidationDirective implements AfterContentInit {
+  @ContentChild(NgControl, { static: false }) ngControl: NgControl;
 
-  @ContentChild(NgControl) private ngControl: NgControl;
-
-  @ContentChild(FormLabelDirective) private label: FormLabelDirective;
+  @ContentChild(FormLabelDirective, { static: false }) label: FormLabelDirective;
 
   ngAfterContentInit() {
     if (this.ngControl && this.label) {

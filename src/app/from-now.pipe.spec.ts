@@ -1,7 +1,7 @@
 import { FromNowPipe } from './from-now.pipe';
+import * as moment from 'moment';
 
 describe('FromNowPipe', () => {
-
   it('should transform the input', () => {
     // given a pipe
     const pipe = new FromNowPipe();
@@ -11,7 +11,8 @@ describe('FromNowPipe', () => {
     const transformed = pipe.transform(date);
 
     // then we should have a formatted string
-    expect(transformed).toContain('ago',
-      'The pipe should transform the date into a human string, using the `fromNow` method of Moment.js');
+    expect(transformed)
+      .withContext('The pipe should transform the date into a human string, using the `fromNow` method of Moment.js')
+      .toBe(moment(date).fromNow());
   });
 });

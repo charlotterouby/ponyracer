@@ -8,7 +8,6 @@ import { WsService } from './ws.service';
 import { MoneyHistoryModel } from './models/money-history.model';
 
 describe('UserService', () => {
-
   let userService: UserService;
   let http: HttpTestingController;
   let jwtInterceptorService: JwtInterceptorService;
@@ -22,12 +21,12 @@ describe('UserService', () => {
     token: 'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjF9.5cAW816GUAg3OWKWlsYyXI4w3fDrS5BpnmbyBjVM7lo'
   };
 
-  beforeEach(() => TestBed.configureTestingModule({
-    imports: [HttpClientTestingModule],
-    providers: [
-      { provide: WsService, useValue: wsService }
-    ]
-  }));
+  beforeEach(() =>
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [{ provide: WsService, useValue: wsService }]
+    })
+  );
 
   beforeEach(() => {
     userService = TestBed.get(UserService);
@@ -39,13 +38,15 @@ describe('UserService', () => {
 
   it('should register a user', () => {
     let actualUser;
-    userService.register(user.login, 'password', 1986).subscribe(fetchedUser => actualUser = fetchedUser);
+    userService.register(user.login, 'password', 1986).subscribe(fetchedUser => (actualUser = fetchedUser));
 
     const req = http.expectOne({ method: 'POST', url: `${environment.baseUrl}/api/users` });
     expect(req.request.body).toEqual({ login: user.login, password: 'password', birthYear: 1986 });
     req.flush(user);
 
-    expect(actualUser).toBe(user, 'You should emit the user.');
+    expect(actualUser)
+      .withContext('You should emit the user.')
+      .toBe(user);
   });
 
   it('should authenticate a user', () => {
@@ -54,13 +55,15 @@ describe('UserService', () => {
 
     const credentials = { login: 'cedric', password: 'hello' };
     let actualUser;
-    userService.authenticate(credentials).subscribe(fetchedUser => actualUser = fetchedUser);
+    userService.authenticate(credentials).subscribe(fetchedUser => (actualUser = fetchedUser));
 
     const req = http.expectOne({ method: 'POST', url: `${environment.baseUrl}/api/users/authentication` });
     expect(req.request.body).toEqual(credentials);
     req.flush(user);
 
-    expect(actualUser).toBe(user, 'The observable should emit the user');
+    expect(actualUser)
+      .withContext('The observable should emit the user')
+      .toBe(user);
     expect(userService.storeLoggedInUser).toHaveBeenCalledWith(user);
   });
 
@@ -108,7 +111,7 @@ describe('UserService', () => {
     expect(jwtInterceptorService.removeJwtToken).toHaveBeenCalled();
   });
 
-  it('should subscribe to the user\'s score', () => {
+  it('should subscribe to the score of the user', () => {
     const userId = 1;
 
     userService.scoreUpdates(userId);
@@ -133,17 +136,18 @@ describe('UserService', () => {
   });
 
   it('should fetch the money history', () => {
-    const expectedHistory = [
-      { instant: '2017-08-03T10:40:00Z', money: 10000 },
-      { instant: '2017-08-04T09:15:00Z', money: 9800 }
-    ] as Array<MoneyHistoryModel>;
+    const expectedHistory = [{ instant: '2017-08-03T10:40:00Z', money: 10000 }, { instant: '2017-08-04T09:15:00Z', money: 9800 }] as Array<
+      MoneyHistoryModel
+    >;
 
     let actualHistory;
-    userService.getMoneyHistory().subscribe(history => actualHistory = history);
+    userService.getMoneyHistory().subscribe(history => (actualHistory = history));
 
     http.expectOne(`${environment.baseUrl}/api/money/history`).flush(expectedHistory);
 
-    expect(actualHistory).not.toBeUndefined('The observable should emit the money history');
+    expect(actualHistory)
+      .withContext('The observable should emit the money history')
+      .not.toBeUndefined();
     expect(actualHistory).toEqual(expectedHistory);
   });
 });

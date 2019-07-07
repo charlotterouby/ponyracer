@@ -1,5 +1,4 @@
 import { fakeAsync, ComponentFixture, TestBed, tick } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRouteSnapshot, convertToParamMap, Params, Router } from '@angular/router';
 import { Observable, of, EMPTY } from 'rxjs';
 
@@ -16,18 +15,12 @@ describe('RaceResolverService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [
-        AppModule,
-        RacesModule,
-        RouterTestingModule
-      ]
+      imports: [AppModule, RacesModule]
     });
 
     // override the lazy loaded module
     const router: Router = TestBed.get(Router);
-    router.resetConfig([
-      { path: 'races', children: RACES_ROUTES },
-    ]);
+    router.resetConfig([{ path: 'races', children: RACES_ROUTES }]);
 
     appComponentFixture = TestBed.createComponent(AppComponent);
     appComponentFixture.detectChanges();
@@ -47,14 +40,17 @@ describe('RaceResolverService', () => {
     const routeSnapshot = { params, paramMap } as ActivatedRouteSnapshot;
     const result = resolver.resolve(routeSnapshot, undefined);
 
-    expect(result).toBe(expectedResult, 'The resolver should call return a race');
+    expect(result)
+      .withContext('The resolver should call return a race')
+      .toBe(expectedResult);
     expect(+(raceService.get as jasmine.Spy).calls.argsFor(0)[0])
-      .toBe(42, 'The resolver should call the RaceService.get method with the id');
+      .withContext('The resolver should call the RaceService.get method with the id')
+      .toBe(42);
   });
 
   it('should be applied on the bet route', fakeAsync(() => {
     const resolver: RaceResolverService = TestBed.get(RaceResolverService);
-    spyOn(resolver, 'resolve').and.returnValue(of({ id: 42 }));
+    spyOn(resolver, 'resolve').and.returnValue(of({ id: 42 } as RaceModel));
 
     const router: Router = TestBed.get(Router);
     router.navigateByUrl('/races/42');
@@ -66,7 +62,7 @@ describe('RaceResolverService', () => {
 
   it('should be applied on the live route', fakeAsync(() => {
     const resolver: RaceResolverService = TestBed.get(RaceResolverService);
-    spyOn(resolver, 'resolve').and.returnValue(of({ id: 42 }));
+    spyOn(resolver, 'resolve').and.returnValue(of({ id: 42 } as RaceModel));
     const raceService: RaceService = TestBed.get(RaceService);
     spyOn(raceService, 'live').and.returnValue(of([]));
 

@@ -7,11 +7,11 @@ export const ROUTES: Routes = [
   { path: '', component: HomeComponent },
   {
     path: 'races',
-    loadChildren: './races/races.module#RacesModule',
+    loadChildren: () => import('./races/races.module').then(m => m.RacesModule),
     canActivate: [LoggedInGuard]
   },
   {
     path: 'users',
-    loadChildren: './users/users.module#UsersModule'
+    loadChildren: () => import('./users/users.module').then(m => m.UsersModule)
   }
 ];

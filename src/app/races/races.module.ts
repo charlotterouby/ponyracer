@@ -14,11 +14,7 @@ import { RACES_ROUTES } from './races.routes';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forChild(RACES_ROUTES),
-    SharedModule
-  ],
+  imports: [CommonModule, RouterModule.forChild(RACES_ROUTES), SharedModule],
   declarations: [
     RacesComponent,
     RaceComponent,
@@ -30,5 +26,4 @@ import { SharedModule } from '../shared/shared.module';
     FinishedRacesComponent
   ]
 })
-export class RacesModule {
-}
+export class RacesModule {}

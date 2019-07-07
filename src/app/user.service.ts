@@ -13,8 +13,7 @@ import { MoneyHistoryModel } from './models/money-history.model';
   providedIn: 'root'
 })
 export class UserService {
-
-  public userEvents = new BehaviorSubject<UserModel>(undefined);
+  userEvents = new BehaviorSubject<UserModel>(undefined);
 
   constructor(private http: HttpClient, private jwtInterceptorService: JwtInterceptorService, private wsService: WsService) {
     this.retrieveUser();
@@ -26,9 +25,9 @@ export class UserService {
   }
 
   authenticate(credentials: { login: string; password: string }): Observable<UserModel> {
-    return this.http.post<UserModel>(`${environment.baseUrl}/api/users/authentication`, credentials).pipe(
-      tap(user => this.storeLoggedInUser(user))
-    );
+    return this.http
+      .post<UserModel>(`${environment.baseUrl}/api/users/authentication`, credentials)
+      .pipe(tap(user => this.storeLoggedInUser(user)));
   }
 
   storeLoggedInUser(user: UserModel) {

@@ -9,11 +9,10 @@ import { RaceService } from './race.service';
   providedIn: 'root'
 })
 export class RacesResolverService implements Resolve<Array<RaceModel>> {
-
-  constructor(private raceService: RaceService) { }
+  constructor(private raceService: RaceService) {}
 
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Array<RaceModel>> {
-    const status = route.routeConfig.path.toUpperCase();
+    const status = route.routeConfig.path.toUpperCase() as 'PENDING' | 'RUNNING' | 'FINISHED';
     return this.raceService.list(status);
   }
 }

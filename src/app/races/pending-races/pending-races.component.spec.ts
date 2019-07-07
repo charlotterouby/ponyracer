@@ -11,28 +11,28 @@ describe('PendingRacesComponent', () => {
   const activatedRoute = {
     snapshot: {
       data: {
-        races: [
-          { name: 'Lyon' },
-          { name: 'Los Angeles' },
-          { name: 'Sydney' },
-          { name: 'Tokyo' },
-          { name: 'Casablanca' }
-        ]
+        races: [{ name: 'Lyon' }, { name: 'Los Angeles' }, { name: 'Sydney' }, { name: 'Tokyo' }, { name: 'Casablanca' }]
       }
     }
   };
 
-  beforeEach(() => TestBed.configureTestingModule({
-    imports: [RacesModule, RouterTestingModule],
-    providers: [{ provide: ActivatedRoute, useValue: activatedRoute }]
-  }));
+  beforeEach(() =>
+    TestBed.configureTestingModule({
+      imports: [RacesModule, RouterTestingModule],
+      providers: [{ provide: ActivatedRoute, useValue: activatedRoute }]
+    })
+  );
 
   it('should display every race name in a title', () => {
     const fixture = TestBed.createComponent(PendingRacesComponent);
     fixture.detectChanges();
 
-    expect(fixture.componentInstance.races).not.toBeNull('You need to have a field `races` initialized with 5 races');
-    expect(fixture.componentInstance.races.length).toBe(5, 'You need to have a field `races` initialized with 5 races');
+    expect(fixture.componentInstance.races)
+      .withContext('You need to have a field `races` initialized with 5 races')
+      .not.toBeNull();
+    expect(fixture.componentInstance.races.length)
+      .withContext('You need to have a field `races` initialized with 5 races')
+      .toBe(5);
     expect(fixture.componentInstance.races[0].name).toBe('Lyon');
     expect(fixture.componentInstance.races[1].name).toBe('Los Angeles');
     expect(fixture.componentInstance.races[2].name).toBe('Sydney');
@@ -41,7 +41,9 @@ describe('PendingRacesComponent', () => {
 
     const debugElement = fixture.debugElement;
     const raceNames = debugElement.queryAll(By.directive(RaceComponent));
-    expect(raceNames.length).toBe(4, 'You should have four `RaceComponent` displayed, use the `slice` pipe');
+    expect(raceNames.length)
+      .withContext('You should have four `RaceComponent` displayed')
+      .toBe(4);
   });
 
   it('should display a link to bet on a race', () => {
@@ -50,7 +52,9 @@ describe('PendingRacesComponent', () => {
 
     const element = fixture.nativeElement;
     const raceNames = element.querySelectorAll('a');
-    expect(raceNames.length).toBe(4, 'You must have a link to go to the bet page for each race');
+    expect(raceNames.length)
+      .withContext('You must have a link to go to the bet page for each race')
+      .toBe(4);
     expect(raceNames[0].textContent).toContain('Bet on Lyon');
     expect(raceNames[1].textContent).toContain('Bet on Los Angeles');
     expect(raceNames[2].textContent).toContain('Bet on Sydney');

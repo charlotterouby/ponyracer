@@ -12,10 +12,9 @@ import { PonyWithPositionModel } from './models/pony.model';
   providedIn: 'root'
 })
 export class RaceService {
-
   constructor(private http: HttpClient, private wsService: WsService) {}
 
-  list(status: string): Observable<Array<RaceModel>> {
+  list(status: 'PENDING' | 'RUNNING' | 'FINISHED'): Observable<Array<RaceModel>> {
     const params = { status };
     return this.http.get<Array<RaceModel>>(`${environment.baseUrl}/api/races`, { params });
   }
@@ -42,5 +41,4 @@ export class RaceService {
   boost(raceId: number, ponyId: number) {
     return this.http.post(`${environment.baseUrl}/api/races/${raceId}/boosts`, { ponyId });
   }
-
 }

@@ -1,9 +1,10 @@
 import { async, TestBed } from '@angular/core/testing';
-import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ActivatedRoute } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { NgbAlert, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { of, throwError } from 'rxjs';
+import * as moment from 'moment';
 
 import { RacesModule } from '../races/races.module';
 import { RaceService } from '../race.service';
@@ -17,13 +18,12 @@ describe('BetComponent', () => {
   const race = { id: 1, name: 'Paris' } as RaceModel;
   const fakeActivatedRoute = { snapshot: { data: { race } } };
 
-  beforeEach(() => TestBed.configureTestingModule({
-    imports: [RacesModule, RouterTestingModule, NgbAlertModule],
-    providers: [
-      { provide: RaceService, useValue: fakeRaceService },
-      { provide: ActivatedRoute, useValue: fakeActivatedRoute }
-    ]
-  }));
+  beforeEach(() =>
+    TestBed.configureTestingModule({
+      imports: [RacesModule, RouterTestingModule, NgbAlertModule],
+      providers: [{ provide: RaceService, useValue: fakeRaceService }, { provide: ActivatedRoute, useValue: fakeActivatedRoute }]
+    })
+  );
 
   it('should display a race name, its date and its ponies', () => {
     const fixture = TestBed.createComponent(BetComponent);
@@ -49,41 +49,49 @@ describe('BetComponent', () => {
 
     // then we should have the name and ponies displayed in the template
     const directives = fixture.debugElement.queryAll(By.directive(PonyComponent));
-    expect(directives).not.toBeNull('You should use the PonyComponent in your template to display the ponies');
-    expect(directives.length).toBe(5, 'You should have five pony components in your template');
+    expect(directives)
+      .withContext('You should use the PonyComponent in your template to display the ponies')
+      .not.toBeNull();
+    expect(directives.length)
+      .withContext('You should have five pony components in your template')
+      .toBe(5);
     const element = fixture.nativeElement;
-    const raceName = element.querySelector('h2');
-    expect(raceName).not.toBeNull('You need an h2 element for the race name');
-    expect(raceName.textContent).toContain('Paris', 'The h2 element should contain the race name');
+    const raceName = element.querySelector('h1');
+    expect(raceName)
+      .withContext('You need an h1 element for the race name')
+      .not.toBeNull();
+    expect(raceName.textContent)
+      .withContext('The h1 element should contain the race name')
+      .toContain('Paris');
     const startInstant = element.querySelector('p');
-    expect(startInstant).not.toBeNull('You should use a `p` element to display the start instant');
-    expect(startInstant.textContent).toContain('ago', 'You should use the `fromNow` pipe you created to format the start instant');
+    expect(startInstant)
+      .withContext('You should use a `p` element to display the start instant')
+      .not.toBeNull();
+    expect(startInstant.textContent)
+      .withContext('You should use the `fromNow` pipe you created to format the start instant')
+      .toBe(moment(betComponent.raceModel.startInstant).fromNow());
   });
 
   it('should trigger a bet when a pony is clicked', async(() => {
     const fixture = TestBed.createComponent(BetComponent);
     fixture.detectChanges();
 
-    fakeRaceService.bet.and.returnValue(of({
-      id: 12,
-      name: 'Paris',
-      ponies: [
-        { id: 1, name: 'Gentle Pie', color: 'YELLOW' },
-        { id: 2, name: 'Big Soda', color: 'ORANGE' }
-      ],
-      startInstant: '2016-02-18T08:02:00Z',
-      betPonyId: 1
-    }));
+    fakeRaceService.bet.and.returnValue(
+      of({
+        id: 12,
+        name: 'Paris',
+        ponies: [{ id: 1, name: 'Gentle Pie', color: 'YELLOW' }, { id: 2, name: 'Big Soda', color: 'ORANGE' }],
+        startInstant: '2016-02-18T08:02:00Z',
+        betPonyId: 1
+      })
+    );
 
-    // given a race in Paris with 5 ponies
+    // given a race in Paris with 2 ponies
     const betComponent = fixture.componentInstance;
     betComponent.raceModel = {
       id: 12,
       name: 'Paris',
-      ponies: [
-        { id: 1, name: 'Gentle Pie', color: 'YELLOW' },
-        { id: 2, name: 'Big Soda', color: 'ORANGE' }
-      ],
+      ponies: [{ id: 1, name: 'Gentle Pie', color: 'YELLOW' }, { id: 2, name: 'Big Soda', color: 'ORANGE' }],
       startInstant: '2016-02-18T08:02:00Z'
     };
     fixture.detectChanges();
@@ -95,7 +103,9 @@ describe('BetComponent', () => {
     // then we should have placed a bet on the pony
     gentlePie.ponyClicked.subscribe(() => {
       expect(fakeRaceService.bet).toHaveBeenCalledWith(12, 1);
-      expect(betComponent.raceModel.betPonyId).toBe(1, 'You must store the response of the bet in the field `raceModel`');
+      expect(betComponent.raceModel.betPonyId)
+        .withContext('You must store the response of the bet in the field `raceModel`')
+        .toBe(1);
     });
 
     gentlePie.ponyClicked.emit(betComponent.raceModel.ponies[0]);
@@ -107,10 +117,7 @@ describe('BetComponent', () => {
     component.raceModel = {
       id: 12,
       name: 'Paris',
-      ponies: [
-        { id: 1, name: 'Gentle Pie', color: 'YELLOW' },
-        { id: 2, name: 'Big Soda', color: 'ORANGE' }
-      ],
+      ponies: [{ id: 1, name: 'Gentle Pie', color: 'YELLOW' }, { id: 2, name: 'Big Soda', color: 'ORANGE' }],
       startInstant: '2016-02-18T08:02:00Z',
       betPonyId: 1
     };
@@ -118,7 +125,9 @@ describe('BetComponent', () => {
 
     const isSelected = component.isPonySelected(pony);
 
-    expect(isSelected).toBe(true, 'The `isPonySelected` method should return true if the pony is selected');
+    expect(isSelected)
+      .withContext('The `isPonySelected` method should return true if the pony is selected')
+      .toBe(true);
   });
 
   it('should initialize the race with ngOnInit', () => {
@@ -128,7 +137,9 @@ describe('BetComponent', () => {
 
     component.ngOnInit();
 
-    expect(component.raceModel).not.toBeUndefined('`ngOnInit` should initialize the `raceModel`');
+    expect(component.raceModel)
+      .withContext('`ngOnInit` should initialize the `raceModel`')
+      .not.toBeUndefined();
     expect(component.raceModel).toEqual(race);
   });
 
@@ -149,14 +160,20 @@ describe('BetComponent', () => {
 
     const debugElement = fixture.debugElement;
     const message = debugElement.query(By.directive(NgbAlert));
-    expect(message).not.toBeNull('You should have an NgbAlert if the bet failed');
+    expect(message)
+      .withContext('You should have an NgbAlert if the bet failed')
+      .not.toBeNull();
     expect(message.nativeElement.textContent).toContain('The race is already started or finished');
-    expect(message.componentInstance.type).toBe('danger', 'The alert should be a danger one');
+    expect(message.componentInstance.type)
+      .withContext('The alert should be a danger one')
+      .toBe('danger');
 
     // close the alert
     message.componentInstance.closeHandler();
     fixture.detectChanges();
-    expect(debugElement.query(By.directive(NgbAlert))).toBeNull('The NgbAlert should be closable');
+    expect(debugElement.query(By.directive(NgbAlert)))
+      .withContext('The NgbAlert should be closable')
+      .toBeNull();
   });
 
   it('should cancel a bet', () => {
@@ -201,7 +218,9 @@ describe('BetComponent', () => {
 
     const element = fixture.nativeElement;
     const button = element.querySelector('a[href="/races/2/live"]');
-    expect(button).not.toBeNull('You should have a link to go to the live with an href `/races/id/live`');
+    expect(button)
+      .withContext('You should have a link to go to the live with an href `/races/id/live`')
+      .not.toBeNull();
     expect(button.textContent).toContain('Watch live!');
   });
 });
